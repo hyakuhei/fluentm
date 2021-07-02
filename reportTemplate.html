@@ -1,0 +1,55 @@
+<html>
+    <head>
+    <title>
+        {{ title }}
+    </title>
+    <style>
+        #dataFlowTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        #dataFlowTable td, #dataFlowTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataFlowTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataFlowTable tr:hover {background-color: #ddd;}
+
+        #dataFlowTable th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #cfe8f1;
+        color: white;
+        }
+    </style>
+</head>
+    <body>
+        <hr />
+        {% for report in sceneReports.keys() %}
+        <img src="{{ sceneReports[report]['dfdImage'] }}">
+        <table id="dataFlowTable">
+            <tr>
+            {% for key in sceneReports[report]['dataFlowTable'][0].keys() %}
+                <td>{{key}}</td>
+            {% endfor %}
+            </tr>
+            {% for row in sceneReports[report]['dataFlowTable'] %}
+                <tr>
+                {% for rowkey in row.keys() %}
+                <td>{{row[rowkey]}}</td>
+                {% endfor %}
+                </tr>
+                
+            {% endfor %}
+        </table>
+
+  
+        <hr />
+        {% endfor %}
+    </body>
+</html>

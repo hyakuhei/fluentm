@@ -23,7 +23,7 @@
         padding-top: 12px;
         padding-bottom: 12px;
         text-align: left;
-        background-color: #cfe8f1;
+        background-color: #a34a4a;
         color: white;
         }
     </style>
@@ -31,11 +31,12 @@
     <body>
         <hr />
         {% for report in sceneReports.keys() %}
+        <h2> {{report}} </h2>
         <img src="{{ sceneReports[report]['dfdImage'] }}">
         <table id="dataFlowTable">
             <tr>
             {% for key in sceneReports[report]['dataFlowTable'][0].keys() %}
-                <td>{{key}}</td>
+                <th>{{key}}</th>
             {% endfor %}
             </tr>
             {% for row in sceneReports[report]['dataFlowTable'] %}

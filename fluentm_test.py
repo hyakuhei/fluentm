@@ -46,10 +46,26 @@ scenes = {
     ],
     # Example using completely new objects created only here, inline
     "Warehouse packages order":[ 
-        DataFlow(Process("Order Resolver").inBoundary(Boundary("Logistics")), Process("Label Printer").inBoundary(Boundary("Warehouse")), "Print label"),
-        DataFlow(Process.get("Label Printer"), Process.get("Order Resolver"), "Label ID"),
-        DataFlow(Process.get("Order Resolver"), Process("Warehouse Notifier").inBoundary(Boundary.get("Warehouse")), "Pick stock item and use label"),
-        DataFlow(Process.get("Warehouse Notifier"), Process.get("Order Resolver"), "Confirmation ID"),
+        DataFlow(
+            Process("Order Resolver").inBoundary(Boundary("Logistics")),
+            Process("Label Printer").inBoundary(Boundary("Warehouse")),
+            "Print label"
+            ),
+        DataFlow(
+            Process.get("Label Printer"),
+            Process.get("Order Resolver"),
+            "Label ID"
+            ),
+        DataFlow(
+            Process.get("Order Resolver"),
+            Process("Warehouse Notifier").inBoundary(Boundary.get("Warehouse")),
+            "Pick stock item and use label"
+            ),
+        DataFlow(
+            Process.get("Warehouse Notifier"),
+            Process.get("Order Resolver"),
+            "Confirmation ID"
+            ),
     ] #TODO: Fix silent error on repeat label names
 }
 

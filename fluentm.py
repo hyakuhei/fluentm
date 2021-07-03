@@ -85,15 +85,41 @@ class Lifetime(Flag):
     BIANNUAL = auto()  # Every two years
 
 class Classification(Flag):
-    TOPSECRET = (
-        auto()
-    )  # Exposure results in complete compromise of at least one customer _or_ significant impact to more than one.
-    SECRET = auto()  # Exposure restuls in signficant impact to at least one customer
-    RESTRICTED = (
-        auto()
-    )  # Exposure likely to allow someone to infer operational or organizational details; e.g Amazon ARNs, VPC names
-    SENSITIVE = auto()  # Embarassing to loose control of this but otherwise unimportant
-    PUBLIC = auto()  # We'd be happy to publish this in our blogs
+    # Exposure results in complete compromise of at least one customer _or_ significant impact to more than one.
+    TOPSECRET = (auto())  
+    # SECRET Exposure restuls in signficant impact to at least one customer
+    SECRET = auto()  
+    # SENSITIVE Embarassing to loose control of this but otherwise unimportant
+    SENSITIVE = auto()  
+    # PUBLIC We'd be happy to publish this in our blogs
+    PUBLIC = auto()  
+
+class UNSET(object):
+    pass
+
+class Carrier(object):
+    def __init__(self, carries, data=None, credentials=None):
+        self.encrypted=UNSET()
+        self.serverAuthenitcated=UNSET()
+        self.serverAuthorized=UNSET()
+        self.clientAuthenticated=UNSET()
+        self.clientAuenticated=UNSET()
+        self.carries = carries
+        self.data = data
+        self.credentials = credentials
+
+"""
+TLS(HTTP(UserCredential, ))
+TLS(HTTP(UserCredential))
+
+VPN(Data(UserCred))
+
+FTP(DATA(), CREDENTIAL)
+"""
+
+class Protocol(object):
+    def __init__(self, name, wraps):
+        pass
 
 class Credential(Asset):
     def __init__(self, name):
@@ -174,12 +200,15 @@ class DataFlow(object):
     _instances = {}
 
     #TODO: Typehints
-    def __init__(self, pitcher, catcher, name, data=None):
+    def __init__(self, pitcher, catcher, name, data=None, credential=None):
         assert isinstance(pitcher, (Actor, Process)), f"pitcher is incorrect type: {pitcher.__class__.__name__}" # Check pitcher is a type that can initiate a dataflow
         assert isinstance(catcher, (Actor, Process)), f"catcher is incorrect type: {catcher.__class__.__name__}" # Check catcher is a type that can receive a dataflow
-        
-        if data != None:
-            assert isinstance(data, (None, Data, list)) # Check that data is either a Data type of a list
+
+        if credential is not None:
+            assert isinstance(credential, Credential)
+
+        if data is not None:
+            assert isinstance(data, (Data, list)) # Check that data is either a Data type of a list
  
             if isinstance(data, list): # If data is a list, check all the elements are Data
                 for d in data:
@@ -201,9 +230,9 @@ class DataFlow(object):
     def __repr__(self):
         return f"{self.__class__.__name__}:{self.name}"
 
-def dfd(scenes:dict, title:str, outputDir:str):
+def dfd(scenes:dict, title:str, outputDir:str, dfdLabels=True):
     graph = Digraph(title)
-    graph.attr(rankdir='LR', size='8,5', label=title, color="blue")
+    graph.attr(rankdir='LR', color="blue")
     graph.attr('node', fontname='Arial', fontsize='14')
     
     # Go through the dataflows, create graphs (where there's boundaries) and nodes
@@ -249,7 +278,10 @@ def dfd(scenes:dict, title:str, outputDir:str):
     
     flowcounter = 1
     for flow in scenes[title]:
-        graph.edge(flow.pitcher.name, flow.catcher.name, label=f"({flowcounter}) {flow.name}")
+        if dfdLabels:
+            graph.edge(flow.pitcher.name, flow.catcher.name, xlabel=f"({flowcounter}) {flow.name}")
+        else:
+            graph.edge(flow.pitcher.name, flow.catcher.name, xlabel=f"({flowcounter})")
         flowcounter += 1
 
     graph.render(f'{outputDir}/{title}-dfd', format='png', view=False)
@@ -269,7 +301,7 @@ def dataFlowTable(scenes: dict, key: str):
         flowCounter += 1
     return table
 
-def report(scenes: dict, outputDir: str, select=None):
+def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
     if select is None:
         select = scenes.keys()
 
@@ -277,7 +309,7 @@ def report(scenes: dict, outputDir: str, select=None):
 
     for key in select:
         sceneReports[key]={
-            'dfdImage': dfd(scenes, key, outputDir=outputDir),
+            'dfdImage': dfd(scenes, key, outputDir=outputDir, dfdLabels=dfdLabels),
             'dataFlowTable': dataFlowTable(scenes, key)
         }
 

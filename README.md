@@ -16,6 +16,36 @@ Typical security review processes suffer from a few common challenges:
 FluenTM is built to fit into a GitOps workflow. The idea is that 
 developers commit threat models that describe their infrastructure. 
 
+![Diagram of process, created with FluenTM](/images/process.png)
+
+The idea is that you can use simplified python, and not even need to understand basic things
+like variables, or control structures, but still create a useful diagram.
+
+```python
+from fluentm import Actor, Boundary, Process, DataFlow
+from fluentm import report
+
+scenes={
+        "FluenTM":[
+            DataFlow(
+                Actor("Security"),
+                Process("ThreatModel").inBoundary(Boundary("Version Control")),
+                "Pull Request: Empty ThreatModel"
+                ),
+            DataFlow(Actor("Developer"), Process.get("ThreatModel"), "Update threat model"),
+            DataFlow(Actor.get("Security"), Process.get("ThreatModel"), "Comments in review tooling"),
+            DataFlow(Process.get("ThreatModel"), Process("Review Meeting"), "Security and Dev attend"),
+            DataFlow(Process.get("Review Meeting"), Process.get("ThreatModel"), "Updates from meeting")
+            
+        ]
+    }
+
+if __name__ == "__main__":
+    r = report(scenes, outputDir="examples/process", dfdLabels=False)
+```
+
+
+
 FluenTM has a series of tenets to govern design decisions:
 1. Users should not need to know python, or pythonic principles to use FluenTM
 

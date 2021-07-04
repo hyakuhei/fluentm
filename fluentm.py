@@ -26,7 +26,7 @@ class Asset(object):
             except:
                 self.boundary = Boundary(boundary)
         else:
-            assert(False, "Bad type to inBoundary")
+            assert False, "Bad type to inBoundary"
         return self
 
     def addCredential(self, credential):

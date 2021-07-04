@@ -14,7 +14,11 @@ Typical security review processes suffer from a few common challenges:
 5. Review materials aren't machine readable and can't easily be fed into automation
 
 FluenTM is built to fit into a GitOps workflow. The idea is that 
-developers commit threat models that describe their infrastructure. 
+developers commit threat models that describe their infrastructure. Security reviewers work
+through code review tools to collaborate on the model before the final-review. After the review,
+results are captured in the model as a pull request from the security team. The security review
+becomes a living, collaboratively maintained document.
+
 
 ![Diagram of process, created with FluenTM](/images/process.png)
 
@@ -57,6 +61,6 @@ FluenTM is incomplete; there's whole big chunks of functionality missing:
 * Review linter
 
 ## Better Options
-[PyTM](https://github.com/izar/pytm) is a pythonic framework for threat modelling, it comes with a rich set of primitives, a reporting framework and a database of known threats.
-[Theragile](https://threagile.io) is the open-source toolkit which allows to model an architecture with its assets in an agile declarative fashion as a YAML file
-
+* [PyTM](https://github.com/izar/pytm) is a pythonic framework for threat modelling, it comes with a rich set of primitives, a reporting framework and a database of known threats.
+* [Theragile](https://threagile.io) is the open-source toolkit which allows to model an architecture with its assets in an agile declarative fashion as a YAML file
+* [Diagrams](https://github.com/mingrammer/diagrams) generates beautifully balanced architecture digrams

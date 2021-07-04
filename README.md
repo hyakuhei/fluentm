@@ -14,7 +14,11 @@ Typical security review processes suffer from a few common challenges:
 5. Review materials aren't machine readable and can't easily be fed into automation
 
 FluenTM is built to fit into a GitOps workflow. The idea is that 
-developers commit threat models that describe their infrastructure. 
+developers commit threat models that describe their infrastructure. Security reviewers work
+through code review tools to collaborate on the model before the final-review. After the review,
+results are captured in the model as a pull request from the security team. The security review
+becomes a living, collaboratively maintained document.
+
 
 FluenTM has a series of tenets to govern design decisions:
 1. Users should not need to know python, or pythonic principles to use FluenTM

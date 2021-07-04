@@ -227,8 +227,8 @@ class DataFlow(object):
         else:
             self = DataFlow._instances[name] 
 
-    def __repr__(self):
-        return f"{self.__class__.__name__}:{self.name}"
+    #def __repr__(self):
+    #    return f"{self.__class__.__name__}:{self.name}"
 
 def renderDfd(graph:Digraph, title:str, outputDir:str):
     graph.render(f'{outputDir}/{title}-dfd', format='png', view=False)

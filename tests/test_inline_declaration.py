@@ -1,4 +1,4 @@
-from fluentm import Actor, Boundary, Process, Data, DataFlow
+from fluentm import Boundary, Process, DataFlow
 from fluentm import dfd, renderDfd
 
 # Example using completely new objects created only here, inline

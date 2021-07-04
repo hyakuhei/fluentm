@@ -5,7 +5,6 @@ from graphviz import Digraph
 
 from jinja2 import FileSystemLoader, Environment
 
-
 class Asset(object):
     _instances = {}
 
@@ -21,10 +20,11 @@ class Asset(object):
     def inBoundary(self, boundary):
         if isinstance(boundary, Boundary):
             self.boundary = boundary
-            #print(f"Adding Boundary object '{boundary.name}' to {self.name}")
         elif isinstance(boundary, str):
-            self.boundary = Boundary(boundary)
-            #print(f"Creating Boundary object '{self.boundary.name}' to {self.name}")
+            try:
+                self.boundary = Boundary.get(boundary)
+            except:
+                self.boundary = Boundary(boundary)
         else:
             assert(False, "Bad type to inBoundary")
         return self
@@ -230,7 +230,12 @@ class DataFlow(object):
     def __repr__(self):
         return f"{self.__class__.__name__}:{self.name}"
 
-def dfd(scenes:dict, title:str, outputDir:str, dfdLabels=True):
+def renderDfd(graph:Digraph, title:str, outputDir:str):
+    graph.render(f'{outputDir}/{title}-dfd', format='png', view=False)
+    print(graph)
+    return f"{title}-dfd.png"
+
+def dfd(scenes:dict, title:str, dfdLabels=True, render=False):
     graph = Digraph(title)
     graph.attr(rankdir='LR', color="blue")
     graph.attr('node', fontname='Arial', fontsize='14')
@@ -279,14 +284,12 @@ def dfd(scenes:dict, title:str, outputDir:str, dfdLabels=True):
     flowcounter = 1
     for flow in scenes[title]:
         if dfdLabels:
-            graph.edge(flow.pitcher.name, flow.catcher.name, xlabel=f"({flowcounter}) {flow.name}")
+            graph.edge(flow.pitcher.name, flow.catcher.name, label=f"({flowcounter}) {flow.name}")
         else:
-            graph.edge(flow.pitcher.name, flow.catcher.name, xlabel=f"({flowcounter})")
+            graph.edge(flow.pitcher.name, flow.catcher.name, label=f"({flowcounter})")
         flowcounter += 1
 
-    graph.render(f'{outputDir}/{title}-dfd', format='png', view=False)
-    print(graph)
-    return f"{title}-dfd.png"
+    return graph
 
 def dataFlowTable(scenes: dict, key: str):
     table = []
@@ -308,8 +311,10 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
     sceneReports = {}
 
     for key in select:
+        graph = dfd(scenes, key, dfdLabels=dfdLabels)
         sceneReports[key]={
-            'dfdImage': dfd(scenes, key, outputDir=outputDir, dfdLabels=dfdLabels),
+            'graph': graph,
+            'dfdImage': renderDfd(graph, key, outputDir=outputDir),
             'dataFlowTable': dataFlowTable(scenes, key)
         }
 

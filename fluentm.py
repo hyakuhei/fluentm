@@ -2,8 +2,138 @@ from enum import Flag, auto
 from typing import Union
 
 from graphviz import Digraph
-
 from jinja2 import FileSystemLoader, Environment
+
+SPACES = "   "
+
+
+class WrappableProtocol(object):
+    def __init__(
+        self,
+        toWrap,
+        encrypted: Union[UNSET, bool],
+        serverAuthenticated: Union[UNSET, bool],
+        clientAuthenticated: Union[UNSET, bool],
+        serverCredential: Union[UNSET, str, None],
+        clientCredential: Union[UNSET, str, None],
+        version: Union[UNSET, str]
+    ):
+        self.wraps = toWrap
+        self.encrypted = encrypted
+        self.serverAuthenticated = serverAuthenticated
+        self.clientAuthenticated = clientAuthenticated
+        self.serverCredential = serverCredential
+        self.clientCredential = clientCredential
+        self.version = version
+
+    def printChain(self, depth=0):
+        print(f"{SPACES * depth} {self.__class__.__name__}")
+        print(f"{SPACES*depth} Encrypted: {self.encrypted}")
+        print(f"{SPACES*depth} serverAuthenticated: {self.serverAuthenticated}")
+        print(f"{SPACES*depth} serverAuthenticated: {self.serverAuthenticated}")
+        print(f"{SPACES*depth} serverCredential: {self.serverCredential}")
+        print(f"{SPACES*depth} clientCredential: {self.clientCredential}")
+        print(f"{SPACES*depth} version: {self.version}")
+        # ...
+        print(f"{SPACES*depth} Wraps:")
+        if isinstance(self.wraps, WrappableProtocol):
+            self.wraps.printChain(depth=depth+1)
+        else:
+            print(f"{SPACES* (depth+1)} {self.wraps}")
+
+class IPSEC(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrytped = True,
+            serverAuthenticated = True,
+            clientAuthenticated = True,
+            serverCredential="x509", #TODO: Replace with a type? Would that be useful?
+            clientCredential="x509",
+        )
+
+class TLSVPN(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrytped = True,
+            serverAuthenticated = True,
+            clientAuthenticated = False,
+            serverCredential="x509", #TODO: Replace with a type? Would that be useful?
+            clientCredential=None
+        )
+
+class MTLSVPN(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrytped = True,
+            serverAuthenticated = True,
+            clientAuthenticated = True,
+            serverCredential="x509",
+            clientCredential="x509"
+        )
+
+class TLS(WrappableProtocol):
+    def __init__(self, toWrap, version="1.2"):
+        super().__init__(
+            toWrap,
+            encrypted = True,
+            serverAuthenticated= True,
+            clientAuthenticated=False,
+            serverCredential="x509",
+            clientCredential=None,
+            version=version
+        )
+
+class TLS(WrappableProtocol):
+    def __init__(self, toWrap, version="1.2"):
+        super().__init__(
+            toWrap,
+            encrypted = True,
+            serverAuthenticated= True,
+            clientAuthenticated=False,
+            serverCredential="x509",
+            clientCredential=None,
+            version=version
+        )
+    
+class SIGV4(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted = False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,
+            clientCredential="rsa",
+            version=UNSET()
+        )    
+
+class HTTPBasicAuth(WrappableProtocol):
+    def __init__(self, toWrap, version="2.0"):
+        super().__init__(
+            toWrap,
+            encrypted = False,
+            serverAuthenticated=False,
+            clientAuthenticated=True,
+            serverCredential="HTTP Basic Auth",
+            clientCredential="Username / Password",
+            version=version
+        )
+
+class HTTP(WrappableProtocol):
+    def __init__(self, toWrap, version="2.0"):
+        super().__init__(
+            toWrap,
+            encrypted = False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,
+            clientCredential=None,
+            version=version
+        )
+
 
 class Asset(object):
     _instances = {}

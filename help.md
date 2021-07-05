@@ -38,3 +38,9 @@ If you're just sending unencrypted data that can be modelled with Plaintext:
 ```python
 Plaintext("DNS Lookup")
 ```
+
+# Defining Data
+A data-flow-diagram is all about, you guessed it, *Data* and how it *flows* around a system. Within FluenTM data is represented by a *Data* type, that allows the DFD to keep track of *data* as it flows around the system, and remember properties of the data like "is it encrypted", "is it confidential" etc.
+
+In the examples above, data was provided as a String, in those cases the string will get wrapped in a Data object, that assumes the data itself is highly sensitive and unencrypted.
+

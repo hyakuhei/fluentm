@@ -9,19 +9,19 @@ from jinja2 import FileSystemLoader, Environment
 
 SPACES = "   "
 
-class UNSET(object):
+class Unset(object):
     pass        
         
 class WrappableProtocol(object):
     def __init__(
         self,
         toWrap: Union[Data, WrappableProtocol],
-        encrypted: Union[UNSET, bool],
-        serverAuthenticated: Union[UNSET, bool],
-        clientAuthenticated: Union[UNSET, bool],
-        serverCredential: Union[UNSET, str, None],
-        clientCredential: Union[UNSET, str, None],
-        version: Union[UNSET, str]
+        encrypted: Union[Unset, bool],
+        serverAuthenticated: Union[Unset, bool],
+        clientAuthenticated: Union[Unset, bool],
+        serverCredential: Union[Unset, str, None],
+        clientCredential: Union[Unset, str, None],
+        version: Union[Unset, str]
     ):
         if isinstance(toWrap, (WrappableProtocol, Data)):
             self.wraps = toWrap
@@ -298,8 +298,8 @@ class Data(Asset):
     def __init__(self, name):
         super().__init__(name)
         self.shape = "Data"
-        self.classified = UNSET()
-        self.encryptedAtRest = UNSET()
+        self.classified = Unset()
+        self.encryptedAtRest = Unset()
 
     def classified(self, classification):
         assert isinstance(classification, Classification)
@@ -334,7 +334,7 @@ class DataFlow(object):
     _instances = {}
 
     #
-    def __init__(self, pitcher: Union[Actor, Process], catcher: Union[Actor, Process], data: Union[str, WrappableProtocol, Data], label:Union[str,None] = None, credential: Union[UNSET, Credential, None]= UNSET()):
+    def __init__(self, pitcher: Union[Actor, Process], catcher: Union[Actor, Process], data: Union[str, WrappableProtocol, Data], label:Union[str,None] = None, credential: Union[Unset, Credential, None]= Unset()):
         assert isinstance(pitcher, (Actor, Process)), f"pitcher is incorrect type: {pitcher.__class__.__name__}" # Check pitcher is a type that can initiate a dataflow
         assert isinstance(catcher, (Actor, Process)), f"catcher is incorrect type: {catcher.__class__.__name__}" # Check catcher is a type that can receive a dataflow
 

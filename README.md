@@ -1,6 +1,3 @@
-[![Python Compatibility][python-badge]][python]
-
-
 # Fluent threat modeling
 
 FluenTM is a tool that enables the creation, validation and maintenance of Threat Models. FluenTM provides a [fluent-style API](https://en.wikipedia.org/wiki/Fluent_interface) to allow engineers to quickly build threat models. 

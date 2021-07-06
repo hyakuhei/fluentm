@@ -349,13 +349,11 @@ class DataFlow(object):
         else:
             logging.error("DataFlow called with unrecognized data type, String, WrappableProtocol or Data are all acceptable ")
         
-
         name = ""
         if label is not None:
             name = label
         else:
             name = theData.getData().name
-
 
         if name not in DataFlow._instances:
             self.pitcher = pitcher
@@ -433,6 +431,7 @@ def dfd(scenes:dict, title:str, dfdLabels=True, render=False):
         flowcounter += 1
 
     return graph
+
 
 def dataFlowTable(scenes: dict, key: str):
     table = []

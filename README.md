@@ -61,3 +61,30 @@ FluenTM is incomplete; there's whole big chunks of functionality missing:
 * [PyTM](https://github.com/izar/pytm) is a pythonic framework for threat modelling, it comes with a rich set of primitives, a reporting framework and a database of known threats.
 * [Theragile](https://threagile.io) is the open-source toolkit which allows to model an architecture with its assets in an agile declarative fashion as a YAML file
 * [Diagrams](https://github.com/mingrammer/diagrams) generates beautifully balanced architecture digrams
+
+## Installation
+```bash
+# Install graphviz using apt/brew/yum etc.
+echo "Replace this echo command with your installation of graphviz"
+
+# Clone this repo
+git clone https://github.com/hyakuhei/fluentm
+
+# CD into the repo
+cd fluentm
+
+# Create a virtualenv
+python3 -m venv .venv
+
+# Load the virtualenv
+source .venv/bin/activate
+
+# Install the requirements
+pip install -r requirements.txt
+
+# Generate an example
+python3 example_bookstore.py
+
+# Open the example
+open examples/bookstore/ThreatModel.html
+```

@@ -52,7 +52,6 @@ FluenTM has a series of tenets to govern design decisions:
 1. Users should not need to know python, or pythonic principles to use FluenTM
 
 FluenTM is incomplete; there's whole big chunks of functionality missing:
-* Folding protocol/data definitions 
 * Sequence Diagram Support
 * Detection of common security anti-patterns
 * Reviewer feedback capture mechanism

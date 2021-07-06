@@ -1,24 +1,33 @@
+from __future__ import annotations
+
 from enum import Flag, auto
 from typing import Union
+import logging
 
 from graphviz import Digraph
 from jinja2 import FileSystemLoader, Environment
 
 SPACES = "   "
 
-
+class Unset(object):
+    pass        
+        
 class WrappableProtocol(object):
     def __init__(
         self,
-        toWrap,
-        encrypted: Union[UNSET, bool],
-        serverAuthenticated: Union[UNSET, bool],
-        clientAuthenticated: Union[UNSET, bool],
-        serverCredential: Union[UNSET, str, None],
-        clientCredential: Union[UNSET, str, None],
-        version: Union[UNSET, str]
+        toWrap: Union[Data, WrappableProtocol],
+        encrypted: Union[Unset, bool],
+        serverAuthenticated: Union[Unset, bool],
+        clientAuthenticated: Union[Unset, bool],
+        serverCredential: Union[Unset, str, None],
+        clientCredential: Union[Unset, str, None],
+        version: Union[Unset, str]
     ):
-        self.wraps = toWrap
+        if isinstance(toWrap, (WrappableProtocol, Data)):
+            self.wraps = toWrap
+        elif isinstance(toWrap, str):
+            self.wraps = Data(toWrap)
+
         self.encrypted = encrypted
         self.serverAuthenticated = serverAuthenticated
         self.clientAuthenticated = clientAuthenticated
@@ -41,11 +50,30 @@ class WrappableProtocol(object):
         else:
             print(f"{SPACES* (depth+1)} {self.wraps}")
 
+    # Recurse through all nested/wraped protocols and return the data that's ultimately wrapped
+    def getData(self):
+        if isinstance(self.wraps, Data):
+            return self.wraps
+        else:
+            return self.wraps.getData()
+
+class Plaintext(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted = False,
+            serverAuthenticated = False,
+            clientAuthenticated = False,
+            serverCredential=None, #TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None
+        )
+
 class IPSEC(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
             toWrap,
-            encrytped = True,
+            encrypted = True,
             serverAuthenticated = True,
             clientAuthenticated = True,
             serverCredential="x509", #TODO: Replace with a type? Would that be useful?
@@ -107,7 +135,7 @@ class SIGV4(WrappableProtocol):
             clientAuthenticated=False,
             serverCredential=None,
             clientCredential="rsa",
-            version=UNSET()
+            version=None
         )    
 
 class HTTPBasicAuth(WrappableProtocol):
@@ -224,33 +252,6 @@ class Classification(Flag):
     # PUBLIC We'd be happy to publish this in our blogs
     PUBLIC = auto()  
 
-class UNSET(object):
-    pass
-
-class Carrier(object):
-    def __init__(self, carries, data=None, credentials=None):
-        self.encrypted=UNSET()
-        self.serverAuthenitcated=UNSET()
-        self.serverAuthorized=UNSET()
-        self.clientAuthenticated=UNSET()
-        self.clientAuenticated=UNSET()
-        self.carries = carries
-        self.data = data
-        self.credentials = credentials
-
-"""
-TLS(HTTP(UserCredential, ))
-TLS(HTTP(UserCredential))
-
-VPN(Data(UserCred))
-
-FTP(DATA(), CREDENTIAL)
-"""
-
-class Protocol(object):
-    def __init__(self, name, wraps):
-        pass
-
 class Credential(Asset):
     def __init__(self, name):
         super().__init__(name)
@@ -291,11 +292,14 @@ class Credential(Asset):
 class Container(Asset):
     def __init__(self, name):
         super().__init__(name)
+        self.shape = "Circle"
 
 class Data(Asset):
     def __init__(self, name):
         super().__init__(name)
         self.shape = "Data"
+        self.classified = Unset()
+        self.encryptedAtRest = Unset()
 
     def classified(self, classification):
         assert isinstance(classification, Classification)
@@ -329,20 +333,27 @@ class Process(Asset):
 class DataFlow(object):
     _instances = {}
 
-    #TODO: Typehints
-    def __init__(self, pitcher, catcher, name, data=None, credential=None):
+    #
+    def __init__(self, pitcher: Union[Actor, Process], catcher: Union[Actor, Process], data: Union[str, WrappableProtocol, Data], label:Union[str,None] = None, credential: Union[Unset, Credential, None]= Unset()):
         assert isinstance(pitcher, (Actor, Process)), f"pitcher is incorrect type: {pitcher.__class__.__name__}" # Check pitcher is a type that can initiate a dataflow
         assert isinstance(catcher, (Actor, Process)), f"catcher is incorrect type: {catcher.__class__.__name__}" # Check catcher is a type that can receive a dataflow
 
-        if credential is not None:
-            assert isinstance(credential, Credential)
-
-        if data is not None:
-            assert isinstance(data, (Data, list)) # Check that data is either a Data type of a list
- 
-            if isinstance(data, list): # If data is a list, check all the elements are Data
-                for d in data:
-                    assert isinstance(d, Data)
+        if isinstance(data, str):
+            logging.warning(f"DataFlow using 'string' for data. Assuming plaintext. See https://github.com/hyakuhei/fluentm/blob/main/help.md")
+            theData = Plaintext(Data(data))
+        elif isinstance(data, Data):
+            logging.warning(f"DataFlow using 'Data', assuming plaintext")
+            theData = Plaintext(data)
+        elif isinstance(data, WrappableProtocol):
+            theData = data
+        else:
+            logging.error("DataFlow called with unrecognized data type, String, WrappableProtocol or Data are all acceptable ")
+        
+        name = ""
+        if label is not None:
+            name = label
+        else:
+            name = theData.getData().name
 
         if name not in DataFlow._instances:
             self.pitcher = pitcher
@@ -420,6 +431,7 @@ def dfd(scenes:dict, title:str, dfdLabels=True, render=False):
         flowcounter += 1
 
     return graph
+
 
 def dataFlowTable(scenes: dict, key: str):
     table = []

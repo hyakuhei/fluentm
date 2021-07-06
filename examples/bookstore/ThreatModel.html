@@ -1,0 +1,277 @@
+<html>
+    <head>
+    <title>
+        Threat Models
+    </title>
+    <style>
+        #dataFlowTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        #dataFlowTable td, #dataFlowTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataFlowTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataFlowTable tr:hover {background-color: #ddd;}
+
+        #dataFlowTable th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #a34a4a;
+        color: white;
+        }
+    </style>
+</head>
+    <body>
+        <hr />
+        
+        <h2> Customer Login </h2>
+        <img src="Customer Login-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>Customer</td>
+                
+                <td>Nginx</td>
+                
+                <td>TLS(HTTP(GET /Login credentials))</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>Nginx</td>
+                
+                <td>User Database</td>
+                
+                <td>SQL(SELECT user password)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>User Database</td>
+                
+                <td>Nginx</td>
+                
+                <td>SQL(password)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>Nginx</td>
+                
+                <td>Customer</td>
+                
+                <td>TLS(HTTP(Login Cookie))</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> Customer Lists Books </h2>
+        <img src="Customer Lists Books-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>Customer</td>
+                
+                <td>Nginx</td>
+                
+                <td>TLS(HTTP(GET /list, Login Cookie))</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>Nginx</td>
+                
+                <td>Stock Database</td>
+                
+                <td>SQL(SELECT stock)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>Stock Database</td>
+                
+                <td>Nginx</td>
+                
+                <td>SQL(Stock Items, Pagination token)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>Nginx</td>
+                
+                <td>Customer</td>
+                
+                <td>TLS(HTTP(Page listings))</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> Customer Views Details </h2>
+        <img src="Customer Views Details-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>Customer</td>
+                
+                <td>Nginx</td>
+                
+                <td>TLS(HTTP(GET /item, Login Cookie))</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>Nginx</td>
+                
+                <td>User Database</td>
+                
+                <td>HTTP(Log viewed ID)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>Nginx</td>
+                
+                <td>Stock Database</td>
+                
+                <td>SQL(SELECT ID)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>Stock Database</td>
+                
+                <td>Nginx</td>
+                
+                <td>SQL(Stock details, CDN image links)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>5</td>
+                
+                <td>Nginx</td>
+                
+                <td>Customer</td>
+                
+                <td>HTTP(Page html)</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>6</td>
+                
+                <td>Customer</td>
+                
+                <td>CDN</td>
+                
+                <td>HTTP(GET images)</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+    </body>
+</html>

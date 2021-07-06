@@ -1,0 +1,16 @@
+digraph FluenTM {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	Security
+	Developer
+	"Review Meeting"
+	subgraph "cluster_Version Control" {
+		color=red label="Version Control"
+		ThreatModel
+	}
+	Security -> ThreatModel [label="(1)"]
+	Developer -> ThreatModel [label="(2)"]
+	Security -> ThreatModel [label="(3)"]
+	ThreatModel -> "Review Meeting" [label="(4)"]
+	"Review Meeting" -> ThreatModel [label="(5)"]
+}

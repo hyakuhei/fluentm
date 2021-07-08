@@ -92,6 +92,7 @@ class Plaintext(WrappableProtocol):
         )
 
 
+
 class IPSEC(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
@@ -115,18 +116,53 @@ class TLSVPN(WrappableProtocol):
             clientCredential=None,
         )
 
-
 class MTLSVPN(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
             toWrap,
-            encrytped=True,
+            encrypted=True,
             serverAuthenticated=True,
             clientAuthenticated=True,
             serverCredential="x509",
             clientCredential="x509",
         )
 
+class SSH(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=True,
+            serverAuthenticated=True,
+            clientAuthenticated=False,
+            serverCredential="ssh-rsa",  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=2
+        )
+
+class Chime(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            serverAuthenticated=True,
+            clientAuthenticated=False,
+            serverCredential="Federated App",  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None
+        )
+
+class GIT(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,
+            clientCredential=None,
+            version=None
+        )
+  
 
 class SQL(WrappableProtocol):
     def __init__(self, toWrap, version="0"):
@@ -205,17 +241,23 @@ class HTTP(WrappableProtocol):
             version=version,
         )
 
-
+# Implements Borg pattern for each unique asset
 class Asset(object):
     _instances = {}
 
     def __init__(self, name):
         self.name = name
 
-        if self.__class__.__name__ not in Asset._instances:
-            Asset._instances[self.__class__.__name__] = {name: self}
+        # If we already have an instance of this class with same name, overwrite 
+        # self to point to it; i.e you can only have one Boundary called "Bob"
+        if self.__class__.__name__ in Asset._instances:
+            if name in Asset._instances[self.__class__.__name__]:
+                self.__dict__ = Asset._instances[self.__class__.__name__][name].__dict__
+                #logging.warn(f"Duplicate creation of {self.__class__.__name__}('{name}') consider using {self.__class__.__name__}.get('{name}')")
+            else:
+                Asset._instances[self.__class__.__name__][name] = self
         else:
-            Asset._instances[self.__class__.__name__][name] = self
+            Asset._instances[self.__class__.__name__] = {name: self}
 
     # Magic str/object function
     def inBoundary(self, boundary):
@@ -447,61 +489,56 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
     graph.attr(rankdir="LR", color="blue")
     graph.attr("node", fontname="Arial", fontsize="14")
 
-    # Go through the dataflows, create graphs (where there's boundaries) and nodes
+    clusterAttr = {
+        "fontname":"Arial",
+        "fontsize":"12",
+        "color":"red",
+        "line":"dotted"
+    }
+
+    boundaryClusters = {}
+    nodes = {}
+
+    flowCounter = 1
     for flow in scenes[title]:
         for e in (flow.pitcher, flow.catcher):
+            if e.name in nodes:
+                # We've already placed this node in a previous flow
+                continue
             if hasattr(e, "boundary"):
-                if not hasattr(e.boundary, "_cluster"):
-                    e.boundary._cluster = Digraph(f"cluster_{e.boundary.name}")
-                    e.boundary._cluster.attr(color="red", label=e.boundary.name)
+                ptr = e
+                while hasattr(ptr, "boundary"):
+                    print(f"Walking: {ptr.boundary.name}")
+                    if ptr.boundary.name not in boundaryClusters:
+                        boundaryClusters[ptr.boundary.name] = Digraph(name=f"cluster_{ptr.boundary.name}", graph_attr=clusterAttr | {"label":ptr.boundary.name})
+                        boundaryClusters[ptr.boundary.name].node(ptr.name)
 
-                if not hasattr(e, "_node"):
-                    e._node = e.boundary._cluster.node(e.name)
+                    if hasattr(ptr.boundary, "boundary"): # See if this boundary, is also in a boundary
+                        if ptr.boundary.boundary.name not in boundaryClusters:
+                            boundaryClusters[ptr.boundary.boundary.name] = Digraph(f"cluster_{ptr.boundary.boundary.name}", graph_attr=clusterAttr | {"label":ptr.boundary.boundary.name})
+                        
+                        boundaryClusters[ptr.boundary.boundary.name].subgraph(boundaryClusters[ptr.boundary.name])
+                    else:
+                        graph.subgraph(boundaryClusters[ptr.boundary.name])
+                    
+                    ptr = ptr.boundary
+                
+                if e.name not in nodes:
+                    print(f"placing {e.name} in {e.boundary.name}")
+                    nodes[e.name] = boundaryClusters[e.boundary.name].node(e.name)
             else:
-                if not hasattr(e, "_node"):
-                    print(f"Added graph node {e.name}")
-                    e._node = graph.node(e.name)
-
-    # Gather up the boundaries and look for a subgraph
-    baseBoundaries = []
-    for flow in scenes[title]:
-        for e in (flow.pitcher, flow.catcher):
-            if hasattr(e, "boundary"):
-                if e.boundary not in baseBoundaries:
-                    baseBoundaries.append(e.boundary)
-
-    for b in baseBoundaries:
-        # See if this boundary has a parent boundary
-        if hasattr(b, "boundary"):
-            # it does! ok, lets see if the parent already has a graph structure:
-            parent = b.boundary
-            if hasattr(parent, "_cluster"):
-                parent._cluster.subgraph(b._cluster)
-            else:
-                print(f"Setting up digraph for {parent} || {parent.name}")
-                parent._cluster = Digraph(f"cluster_{parent.name}")
-                parent._cluster.attr(label=parent.name, color="red")
-                parent._cluster.subgraph(b._cluster)
-
-            if parent not in baseBoundaries:
-                baseBoundaries.append(parent)
+                if e.name not in nodes:
+                    print(f"placing {e.name} in graph root")
+                    nodes[e.name] = graph.node(e.name)
+        
+        if dfdLabels is True:
+            graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter}) {flow.name}")
         else:
-            graph.subgraph(b._cluster)
-
-    flowcounter = 1
-    for flow in scenes[title]:
-        if dfdLabels:
-            graph.edge(
-                flow.pitcher.name,
-                flow.catcher.name,
-                label=f"({flowcounter}) {flow.name}",
-            )
-        else:
-            graph.edge(flow.pitcher.name, flow.catcher.name, label=f"({flowcounter})")
-        flowcounter += 1
-
+            graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter})")
+        
+        flowCounter += 1
+    
     return graph
-
 
 def dataFlowTable(scenes: dict, key: str):
     table = []

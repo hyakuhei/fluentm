@@ -1,16 +1,16 @@
 digraph "Customer Lists Books" {
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
+	Customer
 	subgraph "cluster_Front End" {
-		color=red label="Front End"
+		graph [color=red fontname=Arial fontsize=12 label="Front End" line=dotted]
 		Nginx
 	}
+	Customer -> Nginx [label="(1) GET /list, Login Cookie"]
 	subgraph "cluster_Back End" {
-		color=red label="Back End"
-		"User Database"
+		graph [color=red fontname=Arial fontsize=12 label="Back End" line=dotted]
 		"Stock Database"
 	}
-	Customer -> Nginx [label="(1) GET /list, Login Cookie"]
 	Nginx -> "Stock Database" [label="(2) SELECT stock"]
 	"Stock Database" -> Nginx [label="(3) Stock Items, Pagination token"]
 	Nginx -> Customer [label="(4) Page listings"]

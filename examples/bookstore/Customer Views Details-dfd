@@ -1,23 +1,28 @@
 digraph "Customer Views Details" {
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
+	Customer
 	subgraph "cluster_Front End" {
-		color=red label="Front End"
+		graph [color=red fontname=Arial fontsize=12 label="Front End" line=dotted]
 		Nginx
 	}
+	Customer -> Nginx [label="(1) GET /item, Login Cookie"]
 	subgraph "cluster_Back End" {
-		color=red label="Back End"
+		graph [color=red fontname=Arial fontsize=12 label="Back End" line=dotted]
+		"User Database"
+	}
+	Nginx -> "User Database" [label="(2) Log viewed ID"]
+	subgraph "cluster_Back End" {
+		graph [color=red fontname=Arial fontsize=12 label="Back End" line=dotted]
 		"User Database"
 		"Stock Database"
 	}
-	subgraph "cluster_External CDN" {
-		color=red label="External CDN"
-		CDN
-	}
-	Customer -> Nginx [label="(1) GET /item, Login Cookie"]
-	Nginx -> "User Database" [label="(2) Log viewed ID"]
 	Nginx -> "Stock Database" [label="(3) SELECT ID"]
 	"Stock Database" -> Nginx [label="(4) Stock details, CDN image links"]
 	Nginx -> Customer [label="(5) Page html"]
+	subgraph "cluster_External CDN" {
+		graph [color=red fontname=Arial fontsize=12 label="External CDN" line=dotted]
+		CDN
+	}
 	Customer -> CDN [label="(6) GET images"]
 }

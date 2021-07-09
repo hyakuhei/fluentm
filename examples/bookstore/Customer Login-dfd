@@ -3,14 +3,14 @@ digraph "Customer Login" {
 	node [fontname=Arial fontsize=14]
 	Customer
 	subgraph "cluster_Front End" {
-		color=red label="Front End"
+		graph [color=red fontname=Arial fontsize=12 label="Front End" line=dotted]
 		Nginx
 	}
+	Customer -> Nginx [label="(1) GET /Login credentials"]
 	subgraph "cluster_Back End" {
-		color=red label="Back End"
+		graph [color=red fontname=Arial fontsize=12 label="Back End" line=dotted]
 		"User Database"
 	}
-	Customer -> Nginx [label="(1) GET /Login credentials"]
 	Nginx -> "User Database" [label="(2) SELECT user password"]
 	"User Database" -> Nginx [label="(3) password"]
 	Nginx -> Customer [label="(4) Login Cookie"]

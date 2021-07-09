@@ -511,7 +511,8 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
                     print(f"Walking: {ptr.boundary.name}")
                     if ptr.boundary.name not in boundaryClusters:
                         boundaryClusters[ptr.boundary.name] = Digraph(name=f"cluster_{ptr.boundary.name}", graph_attr=clusterAttr | {"label":ptr.boundary.name})
-                        boundaryClusters[ptr.boundary.name].node(ptr.name)
+                        
+                    nodes[ptr.name] = boundaryClusters[ptr.boundary.name].node(ptr.name)
 
                     if hasattr(ptr.boundary, "boundary"): # See if this boundary, is also in a boundary
                         if ptr.boundary.boundary.name not in boundaryClusters:

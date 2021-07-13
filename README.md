@@ -2,6 +2,8 @@
 
 FluenTM is a tool that enables the creation, validation and maintenance of Threat Models. FluenTM provides a [fluent-style API](https://en.wikipedia.org/wiki/Fluent_interface) to allow engineers to quickly build threat models. 
 
+The goal of FluenTM is go allow engineers to quickly build maintainable threat models. 
+
 FluenTM is built for use by [GitOps](https://www.cloudbees.com/gitops/what-is-gitops) teams, where control systems; configuration and large amounts of documentation are stored in version control. The goal of FluenTM is to allow developers to build meaningful threat models with as little effort as possible and for those diagrams to be maintainable and version controlled.
 
 Typical security review processes suffer from a few common challenges:

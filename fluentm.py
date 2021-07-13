@@ -66,11 +66,11 @@ class WrappableProtocol(object):
             s = ""
 
         if isinstance(self, WrappableProtocol):
-            s += f"{self.__class__.__name__}("
+            s += f"{self.__class__.__name__}( "
             if isinstance(self.wraps, WrappableProtocol):
                 return self.wraps.flatString(depth=depth + 1, s=s)
             if isinstance(self.wraps, Data):
-                s += f"{self.wraps.name}{')'*(depth+1)}"
+                s += f"{self.wraps.name}{' )'*(depth+1)}"
                 return s
         else:
             assert False, "Bad instance type in WrappableProtocol structure"
@@ -91,6 +91,17 @@ class Plaintext(WrappableProtocol):
             version=None,
         )
 
+class Internal(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None
+        )
 
 
 class IPSEC(WrappableProtocol):
@@ -433,7 +444,8 @@ class DataFlow(object):
         catcher: Union[Actor, Process],
         data: Union[str, WrappableProtocol, Data],
         label: Union[str, None] = None,
-        credential: Union[Unset, Credential, None] = Unset()
+        credential: Union[Unset, Credential, None] = Unset(),
+        response: Union[WrappableProtocol, None] = None
     ):
         assert isinstance(
             pitcher, (Actor, Process)
@@ -465,6 +477,9 @@ class DataFlow(object):
         else:
             name = wrappedData.getData().name
 
+        if response != None:
+            self.response = response
+
         if name not in DataFlow._instances:
             self.pitcher = pitcher
             self.catcher = catcher
@@ -485,7 +500,7 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
 
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
-    graph = Digraph(title)
+    graph = Digraph(title)   
     graph.attr(rankdir="LR", color="blue")
     graph.attr("node", fontname="Arial", fontsize="14")
 
@@ -501,6 +516,7 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
 
     flowCounter = 1
     for flow in scenes[title]:
+        print(flow)
         for e in (flow.pitcher, flow.catcher):
             if e.name in nodes:
                 # We've already placed this node in a previous flow
@@ -511,8 +527,9 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
                     print(f"Walking: {ptr.boundary.name}")
                     if ptr.boundary.name not in boundaryClusters:
                         boundaryClusters[ptr.boundary.name] = Digraph(name=f"cluster_{ptr.boundary.name}", graph_attr=clusterAttr | {"label":ptr.boundary.name})
-                        
-                    nodes[ptr.name] = boundaryClusters[ptr.boundary.name].node(ptr.name)
+                    
+                    if type(ptr) is not Boundary:
+                        nodes[ptr.name] = boundaryClusters[ptr.boundary.name].node(ptr.name) # This is where nodes get added inside boundaries
 
                     if hasattr(ptr.boundary, "boundary"): # See if this boundary, is also in a boundary
                         if ptr.boundary.boundary.name not in boundaryClusters:
@@ -553,12 +570,31 @@ def dataFlowTable(scenes: dict, key: str):
                 "Data Flow": f.wrappedData.flatString(),
             }
         )
+        
         flowCounter += 1
     return table
+
+def _mixinResponses(scenes, key):
+    newFlows = []
+    for f in scenes[key]:
+        newFlows.append(f)
+        if hasattr(f, "response"): # If there's a response, insert it as a new DataFlow object
+            newFlows.append(
+                DataFlow(
+                    f.catcher,
+                    f.pitcher,
+                    f.response
+                )
+            )
+    scenes[key][:] = newFlows
+
 
 def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
     if select is None:
         select = scenes.keys()
+
+    for key in scenes.keys():
+        _mixinResponses(scenes, key)
 
     sceneReports = {}
 

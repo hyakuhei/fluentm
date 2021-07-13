@@ -518,63 +518,52 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
     }
 
     boundaryClusters = {}
-    nodes = {}
 
-    flowCounter = 1
+    # Track which nodes should be placed in which clusters but place neither until we've built the subgraph structure.
+    placements = {}  
+
+    # Gather the boundaries and understand how they're nested (but don't nest the graphviz objects ,yet)
+    # Graphviz subgraphs can't have nodes added, so you need to populate a graph with nodes first, then subgraph it under another graph
     for flow in scenes[title]:
         print(flow)
         for e in (flow.pitcher, flow.catcher):
-            if e.name in nodes:
-                # We've already placed this node in a previous flow
-                continue
+            if e.name in placements:
+                continue  # skip to next loop
+
+            ptr = e
+            while hasattr(ptr, "boundary"):
+                if ptr.boundary not in boundaryClusters:
+                    boundaryClusters[ptr.boundary] = Digraph(
+                        name=f"cluster_{ptr.boundary.name}",
+                        graph_attr=clusterAttr | {"label": ptr.boundary.name},
+                    )
+                ptr = ptr.boundary
+
             if hasattr(e, "boundary"):
-                ptr = e
-                while hasattr(ptr, "boundary"):
-                    print(f"Walking: {ptr.boundary.name}")
-                    if ptr.boundary.name not in boundaryClusters:
-                        boundaryClusters[ptr.boundary.name] = Digraph(
-                            name=f"cluster_{ptr.boundary.name}",
-                            graph_attr=clusterAttr | {"label": ptr.boundary.name},
-                        )
-
-                    if type(ptr) is not Boundary:
-                        nodes[ptr.name] = boundaryClusters[ptr.boundary.name].node(
-                            ptr.name
-                        )  # This is where nodes get added inside boundaries
-
-                    if hasattr(
-                        ptr.boundary, "boundary"
-                    ):  # See if this boundary, is also in a boundary
-                        if ptr.boundary.boundary.name not in boundaryClusters:
-                            boundaryClusters[ptr.boundary.boundary.name] = Digraph(
-                                f"cluster_{ptr.boundary.boundary.name}",
-                                graph_attr=clusterAttr
-                                | {"label": ptr.boundary.boundary.name},
-                            )
-
-                        boundaryClusters[ptr.boundary.boundary.name].subgraph(
-                            boundaryClusters[ptr.boundary.name]
-                        )
-                    else:
-                        graph.subgraph(boundaryClusters[ptr.boundary.name])
-
-                    ptr = ptr.boundary
-
-                if e.name not in nodes:
-                    print(f"placing {e.name} in {e.boundary.name}")
-                    nodes[e.name] = boundaryClusters[e.boundary.name].node(e.name)
+                placements[e.name] = boundaryClusters[e.boundary]
             else:
-                if e.name not in nodes:
-                    print(f"placing {e.name} in graph root")
-                    nodes[e.name] = graph.node(e.name)
+                placements[e.name] = graph
 
+    # Place nodes in Graphs, ready for subgraphing
+    for n in placements:
+        placements[n].node(n)
+
+    # Subgraph the nodes
+    for c in boundaryClusters:
+        if hasattr(c, "boundary"):
+            boundaryClusters[c.boundary].subgraph(boundaryClusters[c])
+        else:
+            graph.subgraph(boundaryClusters[c])
+
+    # Add the edges
+    flowCounter = 1
+    for flow in scenes[title]:
         if dfdLabels is True:
             graph.edge(
                 flow.pitcher.name, flow.catcher.name, f"({flowCounter}) {flow.name}"
             )
         else:
             graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter})")
-
         flowCounter += 1
 
     return graph

@@ -1,5 +1,5 @@
 from fluentm import Actor, Boundary, Process, Data, DataFlow
-from fluentm import dfd
+from fluentm import dfd, renderDfd
 
 # fluentTM Classes are scoped by name, so, I can only have one Boundary called "Internet"
 # Attempting to instantiate another with the same name will give you the first one you instantiated
@@ -48,65 +48,53 @@ scenes = {
 
 expectedResults = {
     "Customer views book online":"""digraph "Customer views book online" {
-\tcolor=blue rankdir=LR
-\tnode [fontname=Arial fontsize=14]
-\tsubgraph cluster_Internet {
-\t\tcolor=red label=Internet
-\t\tCustomer
-\t}
-\tsubgraph "cluster_BookStore Co" {
-\t\tcolor=red label="BookStore Co"
-\t\tsubgraph "cluster_Front End Systems" {
-\t\t\tcolor=red label="Front End Systems"
-\t\t\t"Web Server"
-\t\t}
-\t\tsubgraph cluster_Databases {
-\t\t\tcolor=red label=Databases
-\t\t\t"Content DB"
-\t\t\t"Stock DB"
-\t\t}
-\t}
-\tCustomer -> "Web Server" [label="(1) View item ID"]
-\t"Web Server" -> "Content DB" [label="(2) Fetch content for ID"]
-\t"Content DB" -> "Web Server" [label="(3) Image Content, Description"]
-\t"Web Server" -> "Stock DB" [label="(4) Get Stock Level"]
-\t"Stock DB" -> "Web Server" [label="(5) Stock Level"]
-\t"Web Server" -> Customer [label="(6) Rendered Item Information"]
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	subgraph cluster_Internet {
+		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		Customer
+	}
+	subgraph "cluster_BookStore Co" {
+		graph [color=red fontname=Arial fontsize=12 label="BookStore Co" line=dotted]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			"Web Server"
+		}
+	}
+	Customer -> "Web Server" [label="(1) View item ID"]
+	"Web Server" -> "Content DB" [label="(2) Fetch content for ID"]
+	"Content DB" -> "Web Server" [label="(3) Image Content, Description"]
+	"Web Server" -> "Stock DB" [label="(4) Get Stock Level"]
+	"Stock DB" -> "Web Server" [label="(5) Stock Level"]
+	"Web Server" -> Customer [label="(6) Rendered Item Information"]
 }""",
     "Customer buys book":"""digraph "Customer buys book" {
-\tcolor=blue rankdir=LR
-\tnode [fontname=Arial fontsize=14]
-\tsubgraph cluster_Internet {
-\t\tcolor=red label=Internet
-\t\tCustomer
-\t}
-\tsubgraph "cluster_BookStore Co" {
-\t\tcolor=red label="BookStore Co"
-\t\tsubgraph "cluster_Front End Systems" {
-\t\t\tcolor=red label="Front End Systems"
-\t\t\t"Web Server"
-\t\t}
-\t\tsubgraph cluster_Databases {
-\t\t\tcolor=red label=Databases
-\t\t\t"Content DB"
-\t\t\t"Stock DB"
-\t\t}
-\t\tsubgraph "cluster_Front End Systems" {
-\t\t\tcolor=red label="Front End Systems"
-\t\t\t"Web Server"
-\t\t}
-\t}
-\tCustomer -> "Web Server" [label="(1) Buy Item ID"]
-\t"Web Server" -> "Merchant API" [label="(2) Process payment"]
-\t"Merchant API" -> "Web Server" [label="(3) Confirmation"]
-\t"Web Server" -> Customer [label="(4) SOLD!"]
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	subgraph cluster_Internet {
+		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		Customer
+	}
+	subgraph "cluster_BookStore Co" {
+		graph [color=red fontname=Arial fontsize=12 label="BookStore Co" line=dotted]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			"Web Server"
+		}
+	}
+	Customer -> "Web Server" [label="(1) Buy Item ID"]
+	"Web Server" -> "Merchant API" [label="(2) Process payment"]
+	"Merchant API" -> "Web Server" [label="(3) Confirmation"]
+	"Web Server" -> Customer [label="(4) SOLD!"]
 }"""
 }
 
 def test_dfd_from_variables():
     graph = dfd(scenes, "Customer views book online")
-    assert graph.__str__() == expectedResults["Customer views book online"]
+    renderDfd(graph,"Customer views book online", outputDir="testOutput")
+    assert graph.__str__() == expectedResults['Customer views book online']
 
 def test_dfd_from_gets():
     graph = dfd(scenes, "Customer buys book")
-    assert graph.__str__() == expectedResults["Customer buys book"]
+    renderDfd(graph,"Customer buys book", outputDir="testOutput")
+    assert graph.__str__() == expectedResults['Customer buys book']

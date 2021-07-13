@@ -91,6 +91,7 @@ class Plaintext(WrappableProtocol):
             version=None,
         )
 
+
 class Internal(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
@@ -100,7 +101,7 @@ class Internal(WrappableProtocol):
             clientAuthenticated=False,
             serverCredential=None,  # TODO: Replace with a type? Would that be useful?
             clientCredential=None,
-            version=None
+            version=None,
         )
 
 
@@ -127,6 +128,7 @@ class TLSVPN(WrappableProtocol):
             clientCredential=None,
         )
 
+
 class MTLSVPN(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
@@ -138,6 +140,7 @@ class MTLSVPN(WrappableProtocol):
             clientCredential="x509",
         )
 
+
 class SSH(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
@@ -147,8 +150,9 @@ class SSH(WrappableProtocol):
             clientAuthenticated=False,
             serverCredential="ssh-rsa",  # TODO: Replace with a type? Would that be useful?
             clientCredential=None,
-            version=2
+            version=2,
         )
+
 
 class Chime(WrappableProtocol):
     def __init__(self, toWrap):
@@ -159,8 +163,9 @@ class Chime(WrappableProtocol):
             clientAuthenticated=False,
             serverCredential="Federated App",  # TODO: Replace with a type? Would that be useful?
             clientCredential=None,
-            version=None
+            version=None,
         )
+
 
 class GIT(WrappableProtocol):
     def __init__(self, toWrap):
@@ -171,9 +176,9 @@ class GIT(WrappableProtocol):
             clientAuthenticated=False,
             serverCredential=None,
             clientCredential=None,
-            version=None
+            version=None,
         )
-  
+
 
 class SQL(WrappableProtocol):
     def __init__(self, toWrap, version="0"):
@@ -252,6 +257,7 @@ class HTTP(WrappableProtocol):
             version=version,
         )
 
+
 # Implements Borg pattern for each unique asset
 class Asset(object):
     _instances = {}
@@ -259,12 +265,12 @@ class Asset(object):
     def __init__(self, name):
         self.name = name
 
-        # If we already have an instance of this class with same name, overwrite 
+        # If we already have an instance of this class with same name, overwrite
         # self to point to it; i.e you can only have one Boundary called "Bob"
         if self.__class__.__name__ in Asset._instances:
             if name in Asset._instances[self.__class__.__name__]:
                 self.__dict__ = Asset._instances[self.__class__.__name__][name].__dict__
-                #logging.warn(f"Duplicate creation of {self.__class__.__name__}('{name}') consider using {self.__class__.__name__}.get('{name}')")
+                # logging.warn(f"Duplicate creation of {self.__class__.__name__}('{name}') consider using {self.__class__.__name__}.get('{name}')")
             else:
                 Asset._instances[self.__class__.__name__][name] = self
         else:
@@ -445,7 +451,7 @@ class DataFlow(object):
         data: Union[str, WrappableProtocol, Data],
         label: Union[str, None] = None,
         credential: Union[Unset, Credential, None] = Unset(),
-        response: Union[WrappableProtocol, None] = None
+        response: Union[WrappableProtocol, None] = None,
     ):
         assert isinstance(
             pitcher, (Actor, Process)
@@ -500,15 +506,15 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
 
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
-    graph = Digraph(title)   
+    graph = Digraph(title)
     graph.attr(rankdir="LR", color="blue")
     graph.attr("node", fontname="Arial", fontsize="14")
 
     clusterAttr = {
-        "fontname":"Arial",
-        "fontsize":"12",
-        "color":"red",
-        "line":"dotted"
+        "fontname": "Arial",
+        "fontsize": "12",
+        "color": "red",
+        "line": "dotted",
     }
 
     boundaryClusters = {}
@@ -526,21 +532,34 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
                 while hasattr(ptr, "boundary"):
                     print(f"Walking: {ptr.boundary.name}")
                     if ptr.boundary.name not in boundaryClusters:
-                        boundaryClusters[ptr.boundary.name] = Digraph(name=f"cluster_{ptr.boundary.name}", graph_attr=clusterAttr | {"label":ptr.boundary.name})
-                    
-                    if type(ptr) is not Boundary:
-                        nodes[ptr.name] = boundaryClusters[ptr.boundary.name].node(ptr.name) # This is where nodes get added inside boundaries
+                        boundaryClusters[ptr.boundary.name] = Digraph(
+                            name=f"cluster_{ptr.boundary.name}",
+                            graph_attr=clusterAttr | {"label": ptr.boundary.name},
+                        )
 
-                    if hasattr(ptr.boundary, "boundary"): # See if this boundary, is also in a boundary
+                    if type(ptr) is not Boundary:
+                        nodes[ptr.name] = boundaryClusters[ptr.boundary.name].node(
+                            ptr.name
+                        )  # This is where nodes get added inside boundaries
+
+                    if hasattr(
+                        ptr.boundary, "boundary"
+                    ):  # See if this boundary, is also in a boundary
                         if ptr.boundary.boundary.name not in boundaryClusters:
-                            boundaryClusters[ptr.boundary.boundary.name] = Digraph(f"cluster_{ptr.boundary.boundary.name}", graph_attr=clusterAttr | {"label":ptr.boundary.boundary.name})
-                        
-                        boundaryClusters[ptr.boundary.boundary.name].subgraph(boundaryClusters[ptr.boundary.name])
+                            boundaryClusters[ptr.boundary.boundary.name] = Digraph(
+                                f"cluster_{ptr.boundary.boundary.name}",
+                                graph_attr=clusterAttr
+                                | {"label": ptr.boundary.boundary.name},
+                            )
+
+                        boundaryClusters[ptr.boundary.boundary.name].subgraph(
+                            boundaryClusters[ptr.boundary.name]
+                        )
                     else:
                         graph.subgraph(boundaryClusters[ptr.boundary.name])
-                    
+
                     ptr = ptr.boundary
-                
+
                 if e.name not in nodes:
                     print(f"placing {e.name} in {e.boundary.name}")
                     nodes[e.name] = boundaryClusters[e.boundary.name].node(e.name)
@@ -548,15 +567,18 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
                 if e.name not in nodes:
                     print(f"placing {e.name} in graph root")
                     nodes[e.name] = graph.node(e.name)
-        
+
         if dfdLabels is True:
-            graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter}) {flow.name}")
+            graph.edge(
+                flow.pitcher.name, flow.catcher.name, f"({flowCounter}) {flow.name}"
+            )
         else:
             graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter})")
-        
+
         flowCounter += 1
-    
+
     return graph
+
 
 def dataFlowTable(scenes: dict, key: str):
     table = []
@@ -570,22 +592,19 @@ def dataFlowTable(scenes: dict, key: str):
                 "Data Flow": f.wrappedData.flatString(),
             }
         )
-        
+
         flowCounter += 1
     return table
+
 
 def _mixinResponses(scenes, key):
     newFlows = []
     for f in scenes[key]:
         newFlows.append(f)
-        if hasattr(f, "response"): # If there's a response, insert it as a new DataFlow object
-            newFlows.append(
-                DataFlow(
-                    f.catcher,
-                    f.pitcher,
-                    f.response
-                )
-            )
+        if hasattr(
+            f, "response"
+        ):  # If there's a response, insert it as a new DataFlow object
+            newFlows.append(DataFlow(f.catcher, f.pitcher, f.response))
     scenes[key][:] = newFlows
 
 

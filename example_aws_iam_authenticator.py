@@ -7,14 +7,16 @@ scenes = {
         DataFlow(
             Process("kubectl").inBoundary("User Machine"),
             Process("aws-cli").inBoundary("User Machine"),
-            Internal("Exec aws-cli get-token")
+            Internal("Exec aws-cli get-token"),
             ),
         DataFlow(
             Process("aws-cli"),
-            Process("AWS IAM").inBoundary("AWS"),
-            TLS(HTTP(SIGV4("Get STS Token"))),
-            response = TLS(HTTP(JWS("STS Token")))
-            )
+            Process("aws-cli"),
+            Internal("Sign URL using private key")
+        ),
+        DataFlow(
+            Process("aws-cli"), Process("kubectl"), Internal("STS PreSigned URL")
+        )
     ],
     "API traffic": [
         DataFlow(
@@ -41,9 +43,10 @@ scenes = {
         DataFlow(
             Process("aws-iam-authenticator"),
             Process("k8s api"),
-            Unknown("Mapped username"),
+            TLS(HTTP(("Read Mapped usernames"))),
+            response=TLS(HTTP("Config Map")) 
         )
-    ]  # TODO: Fix silent error on repeat label names
+    ]
 }
 
 if __name__ == "__main__":

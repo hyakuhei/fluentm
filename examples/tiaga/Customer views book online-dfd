@@ -1,0 +1,48 @@
+digraph "Customer views book online" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	subgraph cluster_Internet {
+		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		Customer
+	}
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=12 label="Tiaga Co" line=dotted]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			"Web Server"
+		}
+	}
+	Customer -> "Web Server" [label="(1) View item ID"]
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=12 label="Tiaga Co" line=dotted]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			"Web Server"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=12 label=Databases line=dotted]
+			"Content DB"
+		}
+	}
+	"Web Server" -> "Content DB" [label="(2) Fetch content for ID"]
+	"Content DB" -> "Web Server" [label="(3) Image Content, Description"]
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=12 label="Tiaga Co" line=dotted]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			"Web Server"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=12 label=Databases line=dotted]
+			"Content DB"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=12 label=Databases line=dotted]
+			"Content DB"
+			"Stock DB"
+		}
+	}
+	"Web Server" -> "Stock DB" [label="(4) Get Stock Level"]
+	"Stock DB" -> "Web Server" [label="(5) Stock Level"]
+	"Web Server" -> Customer [label="(6) Rendered Item Information"]
+}

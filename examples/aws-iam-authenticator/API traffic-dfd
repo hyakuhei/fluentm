@@ -1,0 +1,27 @@
+digraph "API traffic" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	subgraph "cluster_User Machine" {
+		graph [color=red fontname=Arial fontsize=12 label="User Machine" line=dotted]
+		kubectl
+	}
+	subgraph "cluster_EKS Cluster" {
+		graph [color=red fontname=Arial fontsize=12 label="EKS Cluster" line=dotted]
+		"k8s api"
+	}
+	subgraph "cluster_EKS Data Plane" {
+		graph [color=red fontname=Arial fontsize=12 label="EKS Data Plane" line=dotted]
+		"aws-iam-authenticator"
+		"aws-auth"
+	}
+	subgraph cluster_AWS {
+		graph [color=red fontname=Arial fontsize=12 label=AWS line=dotted]
+		"AWS IAM"
+	}
+	kubectl -> "k8s api" [label="(1) STS token in HTTP header"]
+	"k8s api" -> "aws-iam-authenticator" [label="(2) STS Request from token"]
+	"aws-iam-authenticator" -> "AWS IAM" [label="(3) STS Request"]
+	"AWS IAM" -> "aws-iam-authenticator" [label="(4) ?"]
+	"aws-iam-authenticator" -> "aws-auth" [label="(5) Config Map"]
+	"aws-iam-authenticator" -> "k8s api" [label="(6) Mapped username"]
+}

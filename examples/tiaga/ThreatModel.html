@@ -1,0 +1,277 @@
+<html>
+    <head>
+    <title>
+        Threat Models
+    </title>
+    <style>
+        #dataFlowTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        #dataFlowTable td, #dataFlowTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataFlowTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataFlowTable tr:hover {background-color: #ddd;}
+
+        #dataFlowTable th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #a34a4a;
+        color: white;
+        }
+    </style>
+</head>
+    <body>
+        <hr />
+        
+        <h2> Customer views book online </h2>
+        <img src="Customer views book online-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>Customer</td>
+                
+                <td>Web Server</td>
+                
+                <td>Plaintext( View item ID )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>Web Server</td>
+                
+                <td>Content DB</td>
+                
+                <td>Plaintext( Fetch content for ID )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>Content DB</td>
+                
+                <td>Web Server</td>
+                
+                <td>Plaintext( Image Content, Description )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>Web Server</td>
+                
+                <td>Stock DB</td>
+                
+                <td>Plaintext( Get Stock Level )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>5</td>
+                
+                <td>Stock DB</td>
+                
+                <td>Web Server</td>
+                
+                <td>Plaintext( Stock Level )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>6</td>
+                
+                <td>Web Server</td>
+                
+                <td>Customer</td>
+                
+                <td>Plaintext( Rendered Item Information )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> Customer buys book </h2>
+        <img src="Customer buys book-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>Customer</td>
+                
+                <td>Web Server</td>
+                
+                <td>TLS( HTTP( Buy Item ID ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>Web Server</td>
+                
+                <td>Merchant API</td>
+                
+                <td>Plaintext( Process payment )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>Merchant API</td>
+                
+                <td>Web Server</td>
+                
+                <td>TLS( HTTP( Confirmation ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>Web Server</td>
+                
+                <td>Customer</td>
+                
+                <td>TLS( HTTP( SOLD! ) )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> Warehouse packages order </h2>
+        <img src="Warehouse packages order-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>Order Resolver</td>
+                
+                <td>Label Printer</td>
+                
+                <td>TLS( HTTP( Print label ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>Label Printer</td>
+                
+                <td>Order Resolver</td>
+                
+                <td>TLS( HTTP( Label ID ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>Order Resolver</td>
+                
+                <td>Warehouse Notifier</td>
+                
+                <td>TLS( HTTP( Pick stock item and use label ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>Warehouse Notifier</td>
+                
+                <td>Order Resolver</td>
+                
+                <td>TLS( HTTP( Confirmation ID ) )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+    </body>
+</html>

@@ -1,0 +1,16 @@
+digraph Nested {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	Alice
+	subgraph "cluster_Large Shell" {
+		graph [color=red fontname=Arial fontsize=12 label="Large Shell" line=dotted]
+		subgraph "cluster_Medium Shell" {
+			graph [color=red fontname=Arial fontsize=12 label="Medium Shell" line=dotted]
+			subgraph "cluster_Little Shell" {
+				graph [color=red fontname=Arial fontsize=12 label="Little Shell" line=dotted]
+				Bob
+			}
+		}
+	}
+	Alice -> Bob [label="(1)"]
+}

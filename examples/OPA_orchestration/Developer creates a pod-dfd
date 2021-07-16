@@ -1,0 +1,28 @@
+digraph "Developer creates a pod" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	Developer
+	subgraph "cluster_New AWS Account" {
+		graph [color=red fontname=Arial fontsize=12 label="New AWS Account" line=dotted]
+		subgraph "cluster_New Kubernetes Cluster" {
+			graph [color=red fontname=Arial fontsize=12 label="New Kubernetes Cluster" line=dotted]
+			"k8s API"
+		}
+	}
+	subgraph "cluster_Cluster Orchestrator" {
+		graph [color=red fontname=Arial fontsize=12 label="Cluster Orchestrator" line=dotted]
+		"Admission Controller"
+		OPA
+	}
+	subgraph "cluster_Version Control" {
+		graph [color=red fontname=Arial fontsize=12 label="Version Control" line=dotted]
+		"Policy Repo"
+	}
+	Developer -> "k8s API" [label="(1) Create POD"]
+	"k8s API" -> "Admission Controller" [label="(2) Validate pod creation"]
+	"Admission Controller" -> OPA [label="(3) Validate pod creation.."]
+	OPA -> "Policy Repo" [label="(4) Get latest policy"]
+	"Policy Repo" -> OPA [label="(5) Latest policy REGO"]
+	OPA -> "k8s API" [label="(6) Validation Decision"]
+	"k8s API" -> Developer [label="(7) Approve/Denied"]
+}

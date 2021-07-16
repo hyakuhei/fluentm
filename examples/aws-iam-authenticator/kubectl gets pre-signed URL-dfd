@@ -1,0 +1,16 @@
+digraph "kubectl gets pre-signed URL" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	subgraph "cluster_User Machine" {
+		graph [color=red fontname=Arial fontsize=12 label="User Machine" line=dotted]
+		kubectl
+		"aws-cli"
+	}
+	subgraph cluster_AWS {
+		graph [color=red fontname=Arial fontsize=12 label=AWS line=dotted]
+		"AWS IAM"
+	}
+	kubectl -> "aws-cli" [label="(1) Exec aws-cli get-token"]
+	"aws-cli" -> "AWS IAM" [label="(2) Get STS Token"]
+	"AWS IAM" -> "aws-cli" [label="(3) STS Token"]
+}

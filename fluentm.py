@@ -483,9 +483,7 @@ class Process(Asset):
 
 # DataFlow is _NOT_ an Asset
 class DataFlow(object):
-    _instances = {}
 
-    #
     def __init__(
         self,
         pitcher: Union[Actor, Process],
@@ -528,14 +526,10 @@ class DataFlow(object):
         if response != None:
             self.response = response
 
-        if name not in DataFlow._instances:
-            self.pitcher = pitcher
-            self.catcher = catcher
-            self.name = name
-            self.wrappedData = wrappedData
-            DataFlow._instances[name] = self
-        else:
-            self = DataFlow._instances[name]
+        self.pitcher = pitcher
+        self.catcher = catcher
+        self.name = name
+        self.wrappedData = wrappedData
 
     def __repr__(self):
         return f"{self.__class__.__name__}:{self.name}"

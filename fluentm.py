@@ -20,6 +20,7 @@ class WrappableProtocol(object):
         self,
         toWrap: Union[Data, WrappableProtocol],
         encrypted: Union[Unset, bool],
+        signed: Union[Unset, bool],
         serverAuthenticated: Union[Unset, bool],
         clientAuthenticated: Union[Unset, bool],
         serverCredential: Union[Unset, str, None],
@@ -32,6 +33,7 @@ class WrappableProtocol(object):
             self.wraps = Data(toWrap)
 
         self.encrypted = encrypted
+        self.signed = signed
         self.serverAuthenticated = serverAuthenticated
         self.clientAuthenticated = clientAuthenticated
         self.serverCredential = serverCredential
@@ -84,6 +86,7 @@ class Plaintext(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=False,
             serverAuthenticated=False,
             clientAuthenticated=False,
             serverCredential=None,  # TODO: Replace with a type? Would that be useful?
@@ -97,12 +100,43 @@ class Internal(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=False,
             serverAuthenticated=False,
             clientAuthenticated=False,
             serverCredential=None,  # TODO: Replace with a type? Would that be useful?
             clientCredential=None,
             version=None,
         )
+
+
+class Unknown(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            signed=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None,
+        )
+        # TODO some flag for the linter
+
+
+class JWS(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            signed=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None,
+        )
+        # TODO some flag for the linter
 
 
 class IPSEC(WrappableProtocol):
@@ -159,6 +193,7 @@ class Chime(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=False,
             serverAuthenticated=True,
             clientAuthenticated=False,
             serverCredential="Federated App",  # TODO: Replace with a type? Would that be useful?
@@ -172,6 +207,7 @@ class GIT(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=False,
             serverAuthenticated=False,
             clientAuthenticated=False,
             serverCredential=None,
@@ -185,6 +221,7 @@ class SQL(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=False,
             serverAuthenticated=False,
             clientAuthenticated=True,
             serverCredential="Username/Password",
@@ -198,6 +235,7 @@ class TLS(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=True,
+            signed=False,
             serverAuthenticated=True,
             clientAuthenticated=False,
             serverCredential="x509",
@@ -211,6 +249,7 @@ class TLS(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=True,
+            signed=False,
             serverAuthenticated=True,
             clientAuthenticated=False,
             serverCredential="x509",
@@ -224,6 +263,7 @@ class SIGV4(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=True,
             serverAuthenticated=False,
             clientAuthenticated=False,
             serverCredential=None,
@@ -237,6 +277,7 @@ class HTTPBasicAuth(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=False,
             serverAuthenticated=False,
             clientAuthenticated=True,
             serverCredential="HTTP Basic Auth",
@@ -250,6 +291,7 @@ class HTTP(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=False,
+            signed=False,
             serverAuthenticated=False,
             clientAuthenticated=False,
             serverCredential=None,
@@ -441,9 +483,7 @@ class Process(Asset):
 
 # DataFlow is _NOT_ an Asset
 class DataFlow(object):
-    _instances = {}
 
-    #
     def __init__(
         self,
         pitcher: Union[Actor, Process],
@@ -486,14 +526,10 @@ class DataFlow(object):
         if response != None:
             self.response = response
 
-        if name not in DataFlow._instances:
-            self.pitcher = pitcher
-            self.catcher = catcher
-            self.name = name
-            self.wrappedData = wrappedData
-            DataFlow._instances[name] = self
-        else:
-            self = DataFlow._instances[name]
+        self.pitcher = pitcher
+        self.catcher = catcher
+        self.name = name
+        self.wrappedData = wrappedData
 
     def __repr__(self):
         return f"{self.__class__.__name__}:{self.name}"
@@ -520,7 +556,7 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
     boundaryClusters = {}
 
     # Track which nodes should be placed in which clusters but place neither until we've built the subgraph structure.
-    placements = {}  
+    placements = {}
 
     # Gather the boundaries and understand how they're nested (but don't nest the graphviz objects ,yet)
     # Graphviz subgraphs can't have nodes added, so you need to populate a graph with nodes first, then subgraph it under another graph

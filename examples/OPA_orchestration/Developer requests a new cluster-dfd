@@ -1,0 +1,28 @@
+digraph "Developer requests a new cluster" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	Developer
+	subgraph "cluster_Control Cluster" {
+		graph [color=red fontname=Arial fontsize=12 label="Control Cluster" line=dotted]
+		"Cluster Orchestrator"
+	}
+	subgraph cluster_AWS {
+		graph [color=red fontname=Arial fontsize=12 label=AWS line=dotted]
+		IAM
+		EKS
+	}
+	subgraph "cluster_New AWS Account" {
+		graph [color=red fontname=Arial fontsize=12 label="New AWS Account" line=dotted]
+		subgraph "cluster_New Kubernetes Cluster" {
+			graph [color=red fontname=Arial fontsize=12 label="New Kubernetes Cluster" line=dotted]
+			"k8s API"
+		}
+	}
+	Developer -> "Cluster Orchestrator" [label="(1) Create cluster request"]
+	"Cluster Orchestrator" -> "Cluster Orchestrator" [label="(2) Validates user"]
+	"Cluster Orchestrator" -> IAM [label="(3) Create new account"]
+	IAM -> "Cluster Orchestrator" [label="(4) Account Details"]
+	"Cluster Orchestrator" -> EKS [label="(5) Create new cluster"]
+	EKS -> "Cluster Orchestrator" [label="(6) Cluster Details"]
+	"Cluster Orchestrator" -> "k8s API" [label="(7) Add default admission controller"]
+}

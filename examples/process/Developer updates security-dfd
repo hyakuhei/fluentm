@@ -1,0 +1,10 @@
+digraph "Developer updates security" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	Developer
+	subgraph "cluster_Version Control" {
+		graph [color=red fontname=Arial fontsize=12 label="Version Control" line=dotted]
+		ThreatModel
+	}
+	Developer -> ThreatModel [label="(1)"]
+}

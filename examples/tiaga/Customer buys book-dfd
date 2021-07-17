@@ -1,0 +1,27 @@
+digraph "Customer buys book" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	subgraph cluster_Internet {
+		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		Customer
+	}
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=12 label="Tiaga Co" line=dotted]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			"Web Server"
+		}
+	}
+	Customer -> "Web Server" [label="(1) Buy Item ID"]
+	subgraph cluster_Internet {
+		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		Customer
+		subgraph cluster_Visa {
+			graph [color=red fontname=Arial fontsize=12 label=Visa line=dotted]
+			"Merchant API"
+		}
+	}
+	"Web Server" -> "Merchant API" [label="(2) Process payment"]
+	"Merchant API" -> "Web Server" [label="(3) Confirmation"]
+	"Web Server" -> Customer [label="(4) SOLD!"]
+}

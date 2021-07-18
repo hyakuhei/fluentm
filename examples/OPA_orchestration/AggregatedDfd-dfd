@@ -1,0 +1,41 @@
+digraph "Aggregated DFD" {
+	edge [dir=forward]
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	Developer
+	subgraph "cluster_Control Cluster" {
+		graph [color=red fontname=Arial fontsize=12 label="Control Cluster" line=dotted]
+		"Cluster Orchestrator"
+	}
+	subgraph cluster_AWS {
+		graph [color=red fontname=Arial fontsize=12 label=AWS line=dotted]
+		IAM
+		EKS
+	}
+	subgraph "cluster_New AWS Account" {
+		graph [color=red fontname=Arial fontsize=12 label="New AWS Account" line=dotted]
+		subgraph "cluster_New Kubernetes Cluster" {
+			graph [color=red fontname=Arial fontsize=12 label="New Kubernetes Cluster" line=dotted]
+			"k8s API"
+		}
+	}
+	subgraph "cluster_Cluster Orchestrator" {
+		graph [color=red fontname=Arial fontsize=12 label="Cluster Orchestrator" line=dotted]
+		"Admission Controller"
+		OPA
+	}
+	subgraph "cluster_Version Control" {
+		graph [color=red fontname=Arial fontsize=12 label="Version Control" line=dotted]
+		"Policy Repo"
+	}
+	Developer -> "Cluster Orchestrator"
+	"Cluster Orchestrator" -> "Cluster Orchestrator"
+	"Cluster Orchestrator" -> IAM
+	"Cluster Orchestrator" -> EKS
+	"Cluster Orchestrator" -> "k8s API"
+	Developer -> "k8s API"
+	"k8s API" -> "Admission Controller"
+	"Admission Controller" -> OPA
+	OPA -> "Policy Repo"
+	OPA -> "k8s API"
+}

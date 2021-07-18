@@ -9,13 +9,12 @@ digraph "Warehouse packages order" {
 		graph [color=red fontname=Arial fontsize=12 label=Warehouse line=dotted]
 		"Label Printer"
 	}
-	"Order Resolver" -> "Label Printer" [label="(1) Print label"]
-	"Label Printer" -> "Order Resolver" [label="(2) Label ID"]
 	subgraph cluster_Warehouse {
 		graph [color=red fontname=Arial fontsize=12 label=Warehouse line=dotted]
-		"Label Printer"
 		"Warehouse Notifier"
 	}
+	"Order Resolver" -> "Label Printer" [label="(1) Print label"]
+	"Label Printer" -> "Order Resolver" [label="(2) Label ID"]
 	"Order Resolver" -> "Warehouse Notifier" [label="(3) Pick stock item and use label"]
 	"Warehouse Notifier" -> "Order Resolver" [label="(4) Confirmation ID"]
 }

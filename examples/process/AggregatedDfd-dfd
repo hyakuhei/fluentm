@@ -1,4 +1,5 @@
-digraph FluenTM {
+digraph "Aggregated DFD" {
+	edge [dir=both]
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
 	Security
@@ -8,9 +9,7 @@ digraph FluenTM {
 		graph [color=red fontname=Arial fontsize=12 label="Version Control" line=dotted]
 		ThreatModel
 	}
-	Security -> ThreatModel [label="(1)"]
-	Developer -> ThreatModel [label="(2)"]
-	Security -> ThreatModel [label="(3)"]
-	ThreatModel -> "Review Meeting" [label="(4)"]
-	"Review Meeting" -> ThreatModel [label="(5)"]
+	Security -> ThreatModel
+	Developer -> ThreatModel
+	ThreatModel -> "Review Meeting"
 }

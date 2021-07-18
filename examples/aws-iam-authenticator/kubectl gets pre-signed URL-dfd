@@ -6,11 +6,7 @@ digraph "kubectl gets pre-signed URL" {
 		kubectl
 		"aws-cli"
 	}
-	subgraph cluster_AWS {
-		graph [color=red fontname=Arial fontsize=12 label=AWS line=dotted]
-		"AWS IAM"
-	}
 	kubectl -> "aws-cli" [label="(1) Exec aws-cli get-token"]
-	"aws-cli" -> "AWS IAM" [label="(2) Get STS Token"]
-	"AWS IAM" -> "aws-cli" [label="(3) STS Token"]
+	"aws-cli" -> "aws-cli" [label="(2) Sign URL using private key"]
+	"aws-cli" -> kubectl [label="(3) STS PreSigned URL"]
 }

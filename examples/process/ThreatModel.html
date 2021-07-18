@@ -26,9 +26,21 @@
         background-color: #a34a4a;
         color: white;
         }
+        h2 {
+            color: rgb(48, 27, 23);
+            font-family: verdana;
+            font-size: 25px;
+        }
+        p {
+        font-family: verdana;
+        font-size: 15px;
+    }
     </style>
 </head>
     <body>
+        <h2> Aggregated Model</h2>
+        <p>This high level diagram gathers all flows in this model to show how components interact at a high level.</p>
+        <img src=AggregatedDfd-dfd.png >
         <hr />
         
         <h2> FluenTM </h2>
@@ -54,7 +66,7 @@
                 
                 <td>ThreatModel</td>
                 
-                <td>SSH(GIT(Pull Request: Empty ThreatModel))</td>
+                <td>Plaintext( Pull Request: Empty ThreatModel )</td>
                 
                 </tr>
                 
@@ -67,7 +79,7 @@
                 
                 <td>ThreatModel</td>
                 
-                <td>SSH(GIT(Update threat model))</td>
+                <td>Plaintext( Update threat model )</td>
                 
                 </tr>
                 
@@ -80,7 +92,7 @@
                 
                 <td>ThreatModel</td>
                 
-                <td>TLS(HTTP(Comments in review tooling))</td>
+                <td>Plaintext( Comments in review tooling )</td>
                 
                 </tr>
                 
@@ -93,7 +105,7 @@
                 
                 <td>Review Meeting</td>
                 
-                <td>TLS(Chime(Security and Dev attend))</td>
+                <td>Plaintext( Security and Dev attend )</td>
                 
                 </tr>
                 
@@ -106,73 +118,7 @@
                 
                 <td>ThreatModel</td>
                 
-                <td>SSH(GIT(Updates from meeting))</td>
-                
-                </tr>
-                
-            
-        </table>
-
-  
-        <hr />
-        
-        <h2> Nested </h2>
-        <img src="Nested-dfd.png">
-        <table id="dataFlowTable">
-            <tr>
-            
-                <th>Flow ID</th>
-            
-                <th>Pitcher</th>
-            
-                <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
-            </tr>
-            
-                <tr>
-                
-                <td>1</td>
-                
-                <td>Alice</td>
-                
-                <td>Bob</td>
-                
-                <td>Plaintext(hey)</td>
-                
-                </tr>
-                
-            
-        </table>
-
-  
-        <hr />
-        
-        <h2> Developer updates security </h2>
-        <img src="Developer updates security-dfd.png">
-        <table id="dataFlowTable">
-            <tr>
-            
-                <th>Flow ID</th>
-            
-                <th>Pitcher</th>
-            
-                <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
-            </tr>
-            
-                <tr>
-                
-                <td>1</td>
-                
-                <td>Developer</td>
-                
-                <td>ThreatModel</td>
-                
-                <td>Plaintext(Update)</td>
+                <td>Plaintext( Updates from meeting )</td>
                 
                 </tr>
                 

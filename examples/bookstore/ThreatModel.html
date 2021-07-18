@@ -26,9 +26,21 @@
         background-color: #a34a4a;
         color: white;
         }
+        h2 {
+            color: rgb(48, 27, 23);
+            font-family: verdana;
+            font-size: 25px;
+        }
+        p {
+        font-family: verdana;
+        font-size: 15px;
+    }
     </style>
 </head>
     <body>
+        <h2> Aggregated Model</h2>
+        <p>This high level diagram gathers all flows in this model to show how components interact at a high level.</p>
+        <img src=AggregatedDfd-dfd.png >
         <hr />
         
         <h2> Customer Login </h2>
@@ -54,7 +66,7 @@
                 
                 <td>Nginx</td>
                 
-                <td>TLS(HTTP(GET /Login credentials))</td>
+                <td>TLS( HTTP( GET /Login credentials ) )</td>
                 
                 </tr>
                 
@@ -67,7 +79,7 @@
                 
                 <td>User Database</td>
                 
-                <td>SQL(SELECT user password)</td>
+                <td>SQL( SELECT user password )</td>
                 
                 </tr>
                 
@@ -80,7 +92,7 @@
                 
                 <td>Nginx</td>
                 
-                <td>SQL(password)</td>
+                <td>SQL( password )</td>
                 
                 </tr>
                 
@@ -93,7 +105,7 @@
                 
                 <td>Customer</td>
                 
-                <td>TLS(HTTP(Login Cookie))</td>
+                <td>TLS( HTTP( Login Cookie ) )</td>
                 
                 </tr>
                 
@@ -126,7 +138,7 @@
                 
                 <td>Nginx</td>
                 
-                <td>TLS(HTTP(GET /list, Login Cookie))</td>
+                <td>TLS( HTTP( GET /list, Login Cookie ) )</td>
                 
                 </tr>
                 
@@ -139,7 +151,7 @@
                 
                 <td>Stock Database</td>
                 
-                <td>SQL(SELECT stock)</td>
+                <td>SQL( SELECT stock )</td>
                 
                 </tr>
                 
@@ -152,7 +164,7 @@
                 
                 <td>Nginx</td>
                 
-                <td>SQL(Stock Items, Pagination token)</td>
+                <td>SQL( Stock Items, Pagination token )</td>
                 
                 </tr>
                 
@@ -165,7 +177,7 @@
                 
                 <td>Customer</td>
                 
-                <td>TLS(HTTP(Page listings))</td>
+                <td>TLS( HTTP( Page listings ) )</td>
                 
                 </tr>
                 
@@ -198,7 +210,7 @@
                 
                 <td>Nginx</td>
                 
-                <td>TLS(HTTP(GET /item, Login Cookie))</td>
+                <td>TLS( HTTP( GET /item, Login Cookie ) )</td>
                 
                 </tr>
                 
@@ -211,7 +223,7 @@
                 
                 <td>User Database</td>
                 
-                <td>HTTP(Log viewed ID)</td>
+                <td>HTTP( Log viewed ID )</td>
                 
                 </tr>
                 
@@ -224,7 +236,7 @@
                 
                 <td>Stock Database</td>
                 
-                <td>SQL(SELECT ID)</td>
+                <td>SQL( SELECT ID )</td>
                 
                 </tr>
                 
@@ -237,7 +249,7 @@
                 
                 <td>Nginx</td>
                 
-                <td>SQL(Stock details, CDN image links)</td>
+                <td>SQL( Stock details, CDN image links )</td>
                 
                 </tr>
                 
@@ -250,7 +262,7 @@
                 
                 <td>Customer</td>
                 
-                <td>HTTP(Page html)</td>
+                <td>HTTP( Page html )</td>
                 
                 </tr>
                 
@@ -263,7 +275,7 @@
                 
                 <td>CDN</td>
                 
-                <td>HTTP(GET images)</td>
+                <td>HTTP( GET images )</td>
                 
                 </tr>
                 

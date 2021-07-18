@@ -1,4 +1,5 @@
-digraph "Customer Views Details" {
+digraph "Aggregated DFD" {
+	edge [dir=forward]
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
 	Customer
@@ -18,10 +19,8 @@ digraph "Customer Views Details" {
 		graph [color=red fontname=Arial fontsize=12 label="External CDN" line=dotted]
 		CDN
 	}
-	Customer -> Nginx [label="(1) GET /item, Login Cookie"]
-	Nginx -> "User Database" [label="(2) Log viewed ID"]
-	Nginx -> "Stock Database" [label="(3) SELECT ID"]
-	"Stock Database" -> Nginx [label="(4) Stock details, CDN image links"]
-	Nginx -> Customer [label="(5) Page html"]
-	Customer -> CDN [label="(6) GET images"]
+	Customer -> Nginx
+	Nginx -> "User Database"
+	Nginx -> "Stock Database"
+	Customer -> CDN
 }

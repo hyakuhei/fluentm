@@ -26,9 +26,21 @@
         background-color: #a34a4a;
         color: white;
         }
+        h2 {
+            color: rgb(48, 27, 23);
+            font-family: verdana;
+            font-size: 25px;
+        }
+        p {
+        font-family: verdana;
+        font-size: 15px;
+    }
     </style>
 </head>
     <body>
+        <h2> Aggregated Model</h2>
+        <p>This high level diagram gathers all flows in this model to show how components interact at a high level.</p>
+        <img src=AggregatedDfd-dfd.png >
         <hr />
         
         <h2> kubectl gets pre-signed URL </h2>
@@ -65,9 +77,9 @@
                 
                 <td>aws-cli</td>
                 
-                <td>AWS IAM</td>
+                <td>aws-cli</td>
                 
-                <td>TLS( HTTP( SIGV4( Get STS Token ) ) )</td>
+                <td>Internal( Sign URL using private key )</td>
                 
                 </tr>
                 
@@ -76,11 +88,11 @@
                 
                 <td>3</td>
                 
-                <td>AWS IAM</td>
-                
                 <td>aws-cli</td>
                 
-                <td>TLS( HTTP( JWS( STS Token ) ) )</td>
+                <td>kubectl</td>
+                
+                <td>Internal( STS PreSigned URL )</td>
                 
                 </tr>
                 
@@ -178,7 +190,20 @@
                 
                 <td>k8s api</td>
                 
-                <td>Unknown( Mapped username )</td>
+                <td>TLS( HTTP( Read Mapped usernames ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>7</td>
+                
+                <td>k8s api</td>
+                
+                <td>aws-iam-authenticator</td>
+                
+                <td>TLS( HTTP( Config Map ) )</td>
                 
                 </tr>
                 

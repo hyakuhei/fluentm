@@ -1,4 +1,5 @@
-digraph "Customer views book online" {
+digraph "Aggregated DFD" {
+	edge [dir=both]
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
 	subgraph cluster_Internet {
@@ -19,10 +20,22 @@ digraph "Customer views book online" {
 			"Content DB"
 		}
 	}
-	Customer -> "Web Server" [label="(1) View item ID"]
-	"Web Server" -> "Content DB" [label="(2) Fetch content for ID"]
-	"Content DB" -> "Web Server" [label="(3) Image Content, Description"]
-	"Web Server" -> "Stock DB" [label="(4) Get Stock Level"]
-	"Stock DB" -> "Web Server" [label="(5) Stock Level"]
-	"Web Server" -> Customer [label="(6) Rendered Item Information"]
+	subgraph cluster_Logistics {
+		graph [color=red fontname=Arial fontsize=12 label=Logistics line=dotted]
+		"Order Resolver"
+	}
+	subgraph cluster_Warehouse {
+		graph [color=red fontname=Arial fontsize=12 label=Warehouse line=dotted]
+		"Label Printer"
+	}
+	subgraph cluster_Warehouse {
+		graph [color=red fontname=Arial fontsize=12 label=Warehouse line=dotted]
+		"Warehouse Notifier"
+	}
+	Customer -> "Web Server"
+	"Web Server" -> "Content DB"
+	"Web Server" -> "Stock DB"
+	"Web Server" -> "Merchant API"
+	"Order Resolver" -> "Label Printer"
+	"Order Resolver" -> "Warehouse Notifier"
 }

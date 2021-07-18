@@ -180,6 +180,7 @@ class SSH(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=True,
+            signed=True,
             serverAuthenticated=True,
             clientAuthenticated=False,
             serverCredential="ssh-rsa",  # TODO: Replace with a type? Would that be useful?
@@ -540,6 +541,84 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
     print(graph)
     return f"{title}-dfd.png"
 
+def aggregatedDfd(scenes: dict):
+    print("### Starting Aggregated DFD ###")
+    graph = Digraph("Aggregated DFD")
+    graph.attr(rankdir="LR", color="blue")
+    graph.attr("node", fontname="Arial", fontsize="14")
+
+    clusterAttr = {
+        "fontname": "Arial",
+        "fontsize": "12",
+        "color": "red",
+        "line": "dotted",
+    }
+
+    boundaryClusters = {}
+
+    # Track which nodes should be placed in which clusters but place neither until we've built the subgraph structure.
+    placements = {}
+    edges = {}
+
+    # Gather the boundaries and understand how they're nested (but don't nest the graphviz objects ,yet)
+    # Graphviz subgraphs can't have nodes added, so you need to populate a graph with nodes first, then subgraph it under another graph
+    for scene in scenes:
+        # print(f"scene: {scene}")
+        for flow in scenes[scene]:
+            # print(flow)
+            for e in (flow.pitcher, flow.catcher):
+                if e.name in placements:
+                    continue  # skip to next loop
+
+                ptr = e
+                while hasattr(ptr, "boundary"):
+                    if ptr.boundary not in boundaryClusters:
+                        boundaryClusters[ptr.boundary] = Digraph(
+                            name=f"cluster_{ptr.boundary.name}",
+                            graph_attr=clusterAttr | {"label": ptr.boundary.name},
+                        )
+                    ptr = ptr.boundary
+
+                if hasattr(e, "boundary"):
+                    placements[e.name] = boundaryClusters[e.boundary]
+                else:
+                    placements[e.name] = graph
+
+      # Figure out which edges we need to draw (We want double ended lines)
+        for flow in scenes[scene]:
+            # Look to see if the reverse flow is already there in reverse
+            # If it is, update the line description to say it should go both ways
+            f = (flow.pitcher.name, flow.catcher.name) # Directional flow
+            revf = (f[1],f[0]) # Reverse that directional flow
+
+            # First, check if the flow is already in there but the other way around
+            if revf in edges:
+                edges[revf] = "BOTH"
+            elif f not in edges:
+                edges[f] = "LR"            
+
+    # Place nodes in Graphs, ready for subgraphing
+    print(placements)
+    for n in placements:
+        placements[n].node(n)
+
+    # Subgraph the nodes
+    for c in boundaryClusters:
+        if hasattr(c, "boundary"):
+            boundaryClusters[c.boundary].subgraph(boundaryClusters[c])
+        else:
+            graph.subgraph(boundaryClusters[c])
+
+    for edge in edges:
+        print(edge)
+        if edges[edge] == "LR":
+            graph.edge_attr.update(dir='forward')
+            graph.edge(edge[0],edge[1])
+        elif edges[edge] == "BOTH":
+            graph.edge_attr.update(dir='both')
+            graph.edge(edge[0], edge[1])
+
+    return graph
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
     graph = Digraph(title)
@@ -561,7 +640,7 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
     # Gather the boundaries and understand how they're nested (but don't nest the graphviz objects ,yet)
     # Graphviz subgraphs can't have nodes added, so you need to populate a graph with nodes first, then subgraph it under another graph
     for flow in scenes[title]:
-        print(flow)
+        # print(flow)
         for e in (flow.pitcher, flow.catcher):
             if e.name in placements:
                 continue  # skip to next loop
@@ -641,7 +720,6 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
         _mixinResponses(scenes, key)
 
     sceneReports = {}
-
     for key in select:
         graph = dfd(scenes, key, dfdLabels=dfdLabels)
         sceneReports[key] = {
@@ -649,6 +727,12 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
             "dfdImage": renderDfd(graph, key, outputDir=outputDir),
             "dataFlowTable": dataFlowTable(scenes, key),
         }
+    
+    agg = aggregatedDfd(scenes)
+    aggDfd = {
+        "graph": agg,
+        "dfdImage": renderDfd(agg, "AggregatedDfd", outputDir=outputDir),
+    }
 
     templateLoader = FileSystemLoader(searchpath="./")
     templateEnv = Environment(loader=templateLoader)
@@ -656,5 +740,5 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
 
     with open(f"{outputDir}/ThreatModel.html", "w") as f:
         f.write(
-            template.render({"title": "Threat Models", "sceneReports": sceneReports})
+            template.render({"title": "Threat Models", "sceneReports": sceneReports, "aggregatedDfd":aggDfd})
         )

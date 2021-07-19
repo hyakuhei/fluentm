@@ -558,6 +558,7 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
     print(graph)
     return f"{title}-dfd.png"
 
+
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
     graph = Digraph(title)
     graph.attr(rankdir="LR", color="blue")

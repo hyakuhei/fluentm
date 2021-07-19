@@ -1,0 +1,26 @@
+digraph Towers {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	subgraph "cluster_A Outer" {
+		graph [color=red fontname=Arial fontsize=12 label="A Outer" line=dotted]
+		subgraph "cluster_A Mid" {
+			graph [color=red fontname=Arial fontsize=12 label="A Mid" line=dotted]
+			subgraph "cluster_A Inner" {
+				graph [color=red fontname=Arial fontsize=12 label="A Inner" line=dotted]
+				Alice
+			}
+		}
+	}
+	subgraph "cluster_B Outer" {
+		graph [color=red fontname=Arial fontsize=12 label="B Outer" line=dotted]
+		subgraph "cluster_B Mid" {
+			graph [color=red fontname=Arial fontsize=12 label="B Mid" line=dotted]
+			subgraph "cluster_B Inner" {
+				graph [color=red fontname=Arial fontsize=12 label="B Inner" line=dotted]
+				Bob
+			}
+		}
+	}
+	Alice -> Bob [label="(1) Helo"]
+	Bob -> Alice [label="(2) Hai"]
+}

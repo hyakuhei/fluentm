@@ -28,8 +28,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install flake8 pytest black
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Check black formatting
+      run: |
+        black --diff fluentm.py tests/
+        black --check fluentm.py tests/
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names

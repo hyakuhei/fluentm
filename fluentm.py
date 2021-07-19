@@ -540,6 +540,7 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
     print(graph)
     return f"{title}-dfd.png"
 
+
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
     graph = Digraph(title)
     graph.attr(rankdir="LR", color="blue")
@@ -593,20 +594,28 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
     # Add the edges
 
     if simplified is True:
-        edges = {} # Map the edges and figure out if we need to be double or single ended
+        edges = (
+            {}
+        )  # Map the edges and figure out if we need to be double or single ended
         for flow in scenes[title]:
             # This edge is flow.pitcher.name -> flow.catcher.name
             # If we don't have this edge, first check to see if we have it the other way
-            if (flow.pitcher.name, flow.catcher.name) not in edges and (flow.catcher.name, flow.pitcher.name) not in edges:
+            if (flow.pitcher.name, flow.catcher.name) not in edges and (
+                flow.catcher.name,
+                flow.pitcher.name,
+            ) not in edges:
                 edges[(flow.pitcher.name, flow.catcher.name)] = "forward"
-            elif (flow.pitcher.name, flow.catcher.name) not in edges and (flow.catcher.name, flow.pitcher.name) in edges:
+            elif (flow.pitcher.name, flow.catcher.name) not in edges and (
+                flow.catcher.name,
+                flow.pitcher.name,
+            ) in edges:
                 edges[(flow.catcher.name, flow.pitcher.name)] = "both"
 
         for edge in edges:
             print(edge)
             graph.edge(edge[0], edge[1], dir=edges[edge])
 
-    else: #simplified is False
+    else:  # simplified is False
         flowCounter = 1
         for flow in scenes[title]:
             if dfdLabels is True:
@@ -668,12 +677,11 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
     for flow in scenes.values():
         compoundFlows = compoundFlows + flow
 
-    agg = dfd({'all':compoundFlows}, 'all', simplified=True)
+    agg = dfd({"all": compoundFlows}, "all", simplified=True)
     aggDfd = {
         "graph": agg,
         "dfdImage": renderDfd(agg, "AggregatedDfd", outputDir=outputDir),
     }
-
 
     templateLoader = FileSystemLoader(searchpath="./")
     templateEnv = Environment(loader=templateLoader)

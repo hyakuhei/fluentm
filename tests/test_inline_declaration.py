@@ -3,32 +3,30 @@ from fluentm import dfd, renderDfd
 
 # Example using completely new objects created only here, inline
 scenes = {
-    "Warehouse packages order":[ 
+    "Warehouse packages order": [
         DataFlow(
             Process("Order Resolver").inBoundary(Boundary("Logistics")),
             Process("Label Printer").inBoundary(Boundary("Warehouse")),
-            "Print label"
-            ),
+            "Print label",
+        ),
         DataFlow(
-            Process.get("Label Printer"),
-            Process.get("Order Resolver"),
-            "Label ID"
-            ),
+            Process.get("Label Printer"), Process.get("Order Resolver"), "Label ID"
+        ),
         DataFlow(
             Process.get("Order Resolver"),
             Process("Warehouse Notifier").inBoundary(Boundary.get("Warehouse")),
-            "Pick stock item and use label"
-            ),
+            "Pick stock item and use label",
+        ),
         DataFlow(
             Process.get("Warehouse Notifier"),
             Process.get("Order Resolver"),
-            "Confirmation ID"
-            ),
-    ] #TODO: Fix silent error on repeat label names
+            "Confirmation ID",
+        ),
+    ]  # TODO: Fix silent error on repeat label names
 }
 
 expectedResults = {
-    "Warehouse packages order":"""digraph "Warehouse packages order" {
+    "Warehouse packages order": """digraph "Warehouse packages order" {
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
 	subgraph cluster_Logistics {
@@ -47,8 +45,9 @@ expectedResults = {
 }"""
 }
 
+
 def test_dfd():
     graph = dfd(scenes, "Warehouse packages order")
-    #print(graph)
+    # print(graph)
     renderDfd(graph, "Warehouse packages order", outputDir="testOutput")
     assert graph.__str__() == expectedResults["Warehouse packages order"]

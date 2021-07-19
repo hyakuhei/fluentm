@@ -95,6 +95,11 @@ class Plaintext(WrappableProtocol):
         )
 
 
+class DHCP(Plaintext):
+    def __init__(self, toWrap):
+        super().__init__(toWrap)
+
+
 class Internal(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
@@ -160,6 +165,19 @@ class TLSVPN(WrappableProtocol):
             clientAuthenticated=False,
             serverCredential="x509",  # TODO: Replace with a type? Would that be useful?
             clientCredential=None,
+        )
+
+
+class MTLS(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=True,
+            version=None,
+            serverAuthenticated=True,
+            clientAuthenticated=True,
+            serverCredential="x509",
+            clientCredential="x509",
         )
 
 
@@ -539,7 +557,6 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
     graph.render(f"{outputDir}/{title}-dfd", format="png", view=False)
     print(graph)
     return f"{title}-dfd.png"
-
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
     graph = Digraph(title)

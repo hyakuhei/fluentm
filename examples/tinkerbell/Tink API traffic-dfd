@@ -1,0 +1,27 @@
+digraph "Tink API traffic" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	"tink-cli"
+	subgraph "cluster_Tink Control Plane Network" {
+		graph [color=red fontname=Arial fontsize=12 label="Tink Control Plane Network" line=dotted]
+		"Tink API"
+		boots
+		Nginx
+		"Container Registry"
+		Hegel
+	}
+	subgraph "cluster_On Premise Network" {
+		graph [color=red fontname=Arial fontsize=12 label="On Premise Network" line=dotted]
+		Machine
+	}
+	"tink-cli" -> "Tink API" [label="(1) API request"]
+	Machine -> boots [label="(2) IP Request"]
+	boots -> "Tink API" [label="(3) Boots queries for IP"]
+	Machine -> boots [label="(4) PXE Location Request"]
+	boots -> "Tink API" [label="(5) Boots queries for PXE OS location"]
+	Machine -> Nginx [label="(6) Boot OS Request"]
+	Machine -> "Tink API" [label="(7) Workflow"]
+	Machine -> "Container Registry" [label="(8) Container Images"]
+	Machine -> Hegel [label="(9) Metadata request"]
+	Machine -> Nginx [label="(10) Workload OS"]
+}

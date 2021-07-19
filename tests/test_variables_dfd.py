@@ -5,7 +5,9 @@ from fluentm import dfd, renderDfd
 # Attempting to instantiate another with the same name will give you the first one you instantiated
 # However, if, for reasons, you wanted to create an Actor called "Internet" and a boundary called "Internet", that's ok. Though it's probably stupid.
 
-Actor("Customer").inBoundary("Internet") # Creates an Actor _and_ a Boundary and Associates them.
+Actor("Customer").inBoundary(
+    "Internet"
+)  # Creates an Actor _and_ a Boundary and Associates them.
 
 # We want to create a big boundary for our bookstore
 Boundary("BookStore Co")
@@ -29,25 +31,33 @@ stockDb = Process.get("Stock DB")
 
 scenes = {
     # Example using variables, which is fine for small things but gets hard with longer flows
-    "Customer views book online":[ 
-        DataFlow(customer, webserver, "View item ID"), # Would be nice to describe paramaterized data and transport here easily (Maybe can be inferred by the catcher?)
+    "Customer views book online": [
+        DataFlow(
+            customer, webserver, "View item ID"
+        ),  # Would be nice to describe paramaterized data and transport here easily (Maybe can be inferred by the catcher?)
         DataFlow(webserver, contentDb, "Fetch content for ID"),
         DataFlow(contentDb, webserver, "Image Content, Description"),
         DataFlow(webserver, stockDb, "Get Stock Level"),
         DataFlow(stockDb, webserver, "Stock Level"),
-        DataFlow(webserver, customer, "Rendered Item Information") 
+        DataFlow(webserver, customer, "Rendered Item Information"),
     ],
     # Example using .get for registered types (rather than variables), these were all created above
-    "Customer buys book":[ 
+    "Customer buys book": [
         DataFlow(Actor.get("Customer"), Process.get("Web Server"), "Buy Item ID"),
-        DataFlow(Process.get("Web Server"), Process("Merchant API").inBoundary(Boundary.get("Visa")), "Process payment"), # Dynamic creation of merchant in this flow - not modelled above.
-        DataFlow(Process.get("Merchant API"), Process.get("Web Server"), "Confirmation"),
-        DataFlow(Process.get("Web Server"), Actor.get("Customer"), "SOLD!")
+        DataFlow(
+            Process.get("Web Server"),
+            Process("Merchant API").inBoundary(Boundary.get("Visa")),
+            "Process payment",
+        ),  # Dynamic creation of merchant in this flow - not modelled above.
+        DataFlow(
+            Process.get("Merchant API"), Process.get("Web Server"), "Confirmation"
+        ),
+        DataFlow(Process.get("Web Server"), Actor.get("Customer"), "SOLD!"),
     ],
 }
 
 expectedResults = {
-    "Customer views book online":"""digraph "Customer views book online" {
+    "Customer views book online": """digraph "Customer views book online" {
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
 	subgraph cluster_Internet {
@@ -68,7 +78,7 @@ expectedResults = {
 	"Stock DB" -> "Web Server" [label="(5) Stock Level"]
 	"Web Server" -> Customer [label="(6) Rendered Item Information"]
 }""",
-    "Customer buys book":"""digraph "Customer buys book" {
+    "Customer buys book": """digraph "Customer buys book" {
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
 	subgraph cluster_Internet {
@@ -86,15 +96,17 @@ expectedResults = {
 	"Web Server" -> "Merchant API" [label="(2) Process payment"]
 	"Merchant API" -> "Web Server" [label="(3) Confirmation"]
 	"Web Server" -> Customer [label="(4) SOLD!"]
-}"""
+}""",
 }
+
 
 def test_dfd_from_variables():
     graph = dfd(scenes, "Customer views book online")
-    renderDfd(graph,"Customer views book online", outputDir="testOutput")
-    assert graph.__str__() == expectedResults['Customer views book online']
+    renderDfd(graph, "Customer views book online", outputDir="testOutput")
+    assert graph.__str__() == expectedResults["Customer views book online"]
+
 
 def test_dfd_from_gets():
     graph = dfd(scenes, "Customer buys book")
-    renderDfd(graph,"Customer buys book", outputDir="testOutput")
-    assert graph.__str__() == expectedResults['Customer buys book']
+    renderDfd(graph, "Customer buys book", outputDir="testOutput")
+    assert graph.__str__() == expectedResults["Customer buys book"]

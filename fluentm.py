@@ -484,7 +484,6 @@ class Process(Asset):
 
 # DataFlow is _NOT_ an Asset
 class DataFlow(object):
-
     def __init__(
         self,
         pitcher: Union[Actor, Process],
@@ -541,6 +540,7 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
     print(graph)
     return f"{title}-dfd.png"
 
+
 def aggregatedDfd(scenes: dict):
     print("### Starting Aggregated DFD ###")
     graph = Digraph("Aggregated DFD")
@@ -584,18 +584,18 @@ def aggregatedDfd(scenes: dict):
                 else:
                     placements[e.name] = graph
 
-      # Figure out which edges we need to draw (We want double ended lines)
+        # Figure out which edges we need to draw (We want double ended lines)
         for flow in scenes[scene]:
             # Look to see if the reverse flow is already there in reverse
             # If it is, update the line description to say it should go both ways
-            f = (flow.pitcher.name, flow.catcher.name) # Directional flow
-            revf = (f[1],f[0]) # Reverse that directional flow
+            f = (flow.pitcher.name, flow.catcher.name)  # Directional flow
+            revf = (f[1], f[0])  # Reverse that directional flow
 
             # First, check if the flow is already in there but the other way around
             if revf in edges:
                 edges[revf] = "BOTH"
             elif f not in edges:
-                edges[f] = "LR"            
+                edges[f] = "LR"
 
     # Place nodes in Graphs, ready for subgraphing
     print(placements)
@@ -612,13 +612,14 @@ def aggregatedDfd(scenes: dict):
     for edge in edges:
         print(edge)
         if edges[edge] == "LR":
-            graph.edge_attr.update(dir='forward')
-            graph.edge(edge[0],edge[1])
+            graph.edge_attr.update(dir="forward")
+            graph.edge(edge[0], edge[1])
         elif edges[edge] == "BOTH":
-            graph.edge_attr.update(dir='both')
+            graph.edge_attr.update(dir="both")
             graph.edge(edge[0], edge[1])
 
     return graph
+
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False):
     graph = Digraph(title)
@@ -727,7 +728,7 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
             "dfdImage": renderDfd(graph, key, outputDir=outputDir),
             "dataFlowTable": dataFlowTable(scenes, key),
         }
-    
+
     agg = aggregatedDfd(scenes)
     aggDfd = {
         "graph": agg,
@@ -740,5 +741,11 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
 
     with open(f"{outputDir}/ThreatModel.html", "w") as f:
         f.write(
-            template.render({"title": "Threat Models", "sceneReports": sceneReports, "aggregatedDfd":aggDfd})
+            template.render(
+                {
+                    "title": "Threat Models",
+                    "sceneReports": sceneReports,
+                    "aggregatedDfd": aggDfd,
+                }
+            )
         )

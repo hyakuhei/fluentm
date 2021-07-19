@@ -10,7 +10,9 @@ scenes = {
             Process("Bob").inBoundary(Boundary("B Inner").inBoundary(Boundary("B Mid").inBoundary(Boundary("B Outer")))),
             TLS("Helo"),
             response=TLS("Hai")
-        ),
+        )
+    ],
+    "Enter Charlie":[
         DataFlow(
             Process("Charlie").inBoundary(Boundary("B Outer")),
             Process("Alice"),

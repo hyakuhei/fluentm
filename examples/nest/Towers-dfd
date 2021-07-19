@@ -21,11 +21,6 @@ digraph Towers {
 			}
 		}
 	}
-	subgraph "cluster_B Outer" {
-		graph [color=red fontname=Arial fontsize=12 label="B Outer" line=dotted]
-		Charlie
-	}
 	Alice -> Bob [label="(1) Helo"]
 	Bob -> Alice [label="(2) Hai"]
-	Charlie -> Alice [label="(3) Yo"]
 }

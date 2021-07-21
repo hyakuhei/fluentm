@@ -74,8 +74,8 @@ scenes = {
         DataFlow(
             Process("CNI Pod"),
             Process("VPC API").inBoundary(Boundary("VPC CP").inBoundary(Boundary("AWS SVCs"))),
-            TLS("Update VPC configuration,\nSTS token")
-        )
+            TLS("Update VPC configuration,\nSTS token,\nOperates as Role ARN")
+        ),
     ]
 }
 

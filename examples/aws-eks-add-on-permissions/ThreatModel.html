@@ -1,0 +1,351 @@
+<html>
+    <head>
+    <title>
+        Threat Models
+    </title>
+    <style>
+        #dataFlowTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        #dataFlowTable td, #dataFlowTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataFlowTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataFlowTable tr:hover {background-color: #ddd;}
+
+        #dataFlowTable th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #a34a4a;
+        color: white;
+        }
+        h2 {
+            color: rgb(48, 27, 23);
+            font-family: verdana;
+            font-size: 25px;
+        }
+        p {
+        font-family: verdana;
+        font-size: 15px;
+    }
+    </style>
+</head>
+    <body>
+        <h2> Aggregated Model</h2>
+        <p>This high level diagram gathers all flows in this model to show how components interact at a high level.</p>
+        <img src=AggregatedDfd-dfd.png >
+        <hr />
+        
+        <h2> Create an IAM OIDC provider for cluster </h2>
+        <img src="Create an IAM OIDC provider for cluster-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>User</td>
+                
+                <td>IAM API</td>
+                
+                <td>TLS( SIGV4( Create OIDC provider ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>IAM API</td>
+                
+                <td>User</td>
+                
+                <td>TLS( OIDC URL )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> Create an IAM policy & role to allow CPI addon to manage VPC </h2>
+        <img src="Create an IAM policy & role to allow CPI addon to manage VPC-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>User</td>
+                
+                <td>IAM API</td>
+                
+                <td>TLS( SIGV4( Create Policy ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>IAM API</td>
+                
+                <td>User</td>
+                
+                <td>TLS( Policy ARN )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>User</td>
+                
+                <td>IAM API</td>
+                
+                <td>TLS( SIGV4( Create Role,
+Trusted Entity: Web Identity,
+Identity Provider: OIDC URL,
+Attach Policy: Policy ARN ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>IAM API</td>
+                
+                <td>User</td>
+                
+                <td>TLS( Role ARN )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> Associate IAM role to a cluster service account </h2>
+        <img src="Associate IAM role to a cluster service account-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>User</td>
+                
+                <td>Kube API</td>
+                
+                <td>TLS( SIGV4( Annotate service account $acct with Role ARN ) )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> Deploy Addon </h2>
+        <img src="Deploy Addon-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>User</td>
+                
+                <td>EKS API</td>
+                
+                <td>TLS( SIGV4( Create add-on CNI,
+Cluster: $clusterID ) )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>2</td>
+                
+                <td>EKS API</td>
+                
+                <td>Kube API</td>
+                
+                <td>TLS( Create deployment CNI addon
+Role: Role ARN )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>Kube API</td>
+                
+                <td>aws-iam-authenticator</td>
+                
+                <td>TLS( Get sts token )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>4</td>
+                
+                <td>aws-iam-authenticator</td>
+                
+                <td>IAM API</td>
+                
+                <td>TLS( STS Assume Role,
+ with web identity )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>5</td>
+                
+                <td>IAM API</td>
+                
+                <td>aws-iam-authenticator</td>
+                
+                <td>TLS( JWT STS Token )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>6</td>
+                
+                <td>aws-iam-authenticator</td>
+                
+                <td>Kube API</td>
+                
+                <td>TLS( JWT STS Token )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>7</td>
+                
+                <td>Kube API</td>
+                
+                <td>CNI Pod</td>
+                
+                <td>TLS( Launch Pod,
+svcacct $acct,
+Role ARN,
+JWT STS Token )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+        <h2> CNI configures VPC </h2>
+        <img src="CNI configures VPC-dfd.png">
+        <table id="dataFlowTable">
+            <tr>
+            
+                <th>Flow ID</th>
+            
+                <th>Pitcher</th>
+            
+                <th>Catcher</th>
+            
+                <th>Data Flow</th>
+            
+            </tr>
+            
+                <tr>
+                
+                <td>1</td>
+                
+                <td>CNI Pod</td>
+                
+                <td>VPC API</td>
+                
+                <td>TLS( Update VPC configuration )</td>
+                
+                </tr>
+                
+            
+        </table>
+
+  
+        <hr />
+        
+    </body>
+</html>

@@ -1,0 +1,49 @@
+digraph all {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	User
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		subgraph "cluster_IAM CP" {
+			graph [color=red fontname=Arial fontsize=12 label="IAM CP" line=dotted]
+			"IAM API"
+		}
+	}
+	subgraph "cluster_Single Tenant VPC" {
+		graph [color=red fontname=Arial fontsize=12 label="Single Tenant VPC" line=dotted]
+		subgraph "cluster_Kubernetes Control Plane" {
+			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Control Plane" line=dotted]
+			"Kube API"
+			"aws-iam-authenticator"
+		}
+	}
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		subgraph "cluster_EKS CP" {
+			graph [color=red fontname=Arial fontsize=12 label="EKS CP" line=dotted]
+			"EKS API"
+		}
+	}
+	subgraph "cluster_Customer Account" {
+		graph [color=red fontname=Arial fontsize=12 label="Customer Account" line=dotted]
+		subgraph "cluster_Kubernetes Data Plane" {
+			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Data Plane" line=dotted]
+			"CNI Pod"
+		}
+	}
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		subgraph "cluster_VPC CP" {
+			graph [color=red fontname=Arial fontsize=12 label="VPC CP" line=dotted]
+			"VPC API"
+		}
+	}
+	User -> "IAM API" [dir=both]
+	User -> "Kube API" [dir=forward]
+	User -> "EKS API" [dir=forward]
+	"EKS API" -> "Kube API" [dir=forward]
+	"Kube API" -> "aws-iam-authenticator" [dir=both]
+	"aws-iam-authenticator" -> "IAM API" [dir=both]
+	"Kube API" -> "CNI Pod" [dir=forward]
+	"CNI Pod" -> "VPC API" [dir=forward]
+}

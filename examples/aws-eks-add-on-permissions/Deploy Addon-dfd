@@ -1,0 +1,47 @@
+digraph "Deploy Addon" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	User
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		subgraph "cluster_EKS CP" {
+			graph [color=red fontname=Arial fontsize=12 label="EKS CP" line=dotted]
+			"EKS API"
+		}
+	}
+	subgraph "cluster_Single Tenant VPC" {
+		graph [color=red fontname=Arial fontsize=12 label="Single Tenant VPC" line=dotted]
+		subgraph "cluster_Kubernetes Control Plane" {
+			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Control Plane" line=dotted]
+			"Kube API"
+			"aws-iam-authenticator"
+		}
+	}
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		subgraph "cluster_IAM CP" {
+			graph [color=red fontname=Arial fontsize=12 label="IAM CP" line=dotted]
+			"IAM API"
+		}
+	}
+	subgraph "cluster_Customer Account" {
+		graph [color=red fontname=Arial fontsize=12 label="Customer Account" line=dotted]
+		subgraph "cluster_Kubernetes Data Plane" {
+			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Data Plane" line=dotted]
+			"CNI Pod"
+		}
+	}
+	User -> "EKS API" [label="(1) Create add-on CNI,
+Cluster: $clusterID"]
+	"EKS API" -> "Kube API" [label="(2) Create deployment CNI addon
+Role: Role ARN"]
+	"Kube API" -> "aws-iam-authenticator" [label="(3) Get sts token"]
+	"aws-iam-authenticator" -> "IAM API" [label="(4) STS Assume Role,
+ with web identity"]
+	"IAM API" -> "aws-iam-authenticator" [label="(5) JWT STS Token"]
+	"aws-iam-authenticator" -> "Kube API" [label="(6) JWT STS Token"]
+	"Kube API" -> "CNI Pod" [label="(7) Launch Pod,
+svcacct $acct,
+Role ARN,
+JWT STS Token"]
+}

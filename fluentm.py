@@ -558,7 +558,6 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
 
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
-    print(f"Entering DFD: {title}")
     graph = Digraph(title)
     graph.attr(rankdir="LR", color="blue")
     graph.attr("node", fontname="Arial", fontsize="14")
@@ -578,10 +577,8 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
     # Gather the boundaries and understand how they're nested (but don't nest the graphviz objects ,yet)
     # Graphviz subgraphs can't have nodes added, so you need to populate a graph with nodes first, then subgraph it under another graph
     for flow in scenes[title]:
-        # print(flow)
         for e in (flow.pitcher, flow.catcher):
             if e.name not in placements.keys():
-                # print(f"\n{e.name} not in\n{placements.keys()}")
                 if hasattr(e, "boundary"):
                     ptr = e
                     while hasattr(ptr, "boundary"):
@@ -593,15 +590,12 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
                         ptr = ptr.boundary
 
                     placements[e.name] = boundaryClusters[e.boundary.name]
-                    # print(f"Placing {e.name} in {boundaryClusters[e.boundary]}")
                 else:
                     placements[e.name] = graph
-                    # print(f"Placing {e.name} in graph")
 
     # Place nodes in Graphs, ready for subgraphing
     for n in placements:
         placements[n].node(n)
-        # print(f"{n} : {id(placements[n])} : {placements[n]}")
 
     # Subgraph the nodes
     for c in boundaryClusters:
@@ -632,7 +626,6 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
                 edges[(flow.catcher.name, flow.pitcher.name)] = "both"
 
         for edge in edges:
-            # print(edge)
             graph.edge(edge[0], edge[1], dir=edges[edge])
 
     else:  # simplified is False
@@ -645,9 +638,6 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
             else:
                 graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter})")
             flowCounter += 1
-
-    print("Exiting DFD")
-
     return graph
 
 

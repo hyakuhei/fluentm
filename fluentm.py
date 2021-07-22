@@ -375,7 +375,7 @@ class Asset(object):
         return self
 
     # static / non-instantiated i.e no 'self'
-    def _get(className, instanceName):
+    def get(className, instanceName):
         assert className in Asset._instances
 
         if instanceName in Asset._instances[className]:

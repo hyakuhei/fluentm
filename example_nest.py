@@ -1,4 +1,4 @@
-from fluentm import Actor, Boundary, Process, Data, DataFlow, HTTP, TLS, SQL
+from fluentm import Actor, Boundary, Process, Data, DataFlow, HTTP, TLS, SQL, Internal
 from fluentm import report
 
 
@@ -17,6 +17,13 @@ scenes = {
             Process("Charlie").inBoundary(Boundary("B Outer")),
             Process("Alice"),
             TLS("Yo")
+        )
+    ],
+    "Enter Geoff":[
+        DataFlow(
+            Process("Geoff").inBoundary(Boundary("B Inner")),
+            Process("Bob"),
+            Internal("Oh hai")
         )
     ]
 }

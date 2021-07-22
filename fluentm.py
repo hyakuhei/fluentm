@@ -326,26 +326,20 @@ class Asset(object):
     def __init__(self, name):
         self.name = name
 
-        # If we already have an instance of this class with same name, overwrite
-        # self to point to it; i.e you can only have one Boundary called "Bob"
-        if self.__class__.__name__ in Asset._instances:
-            if name in Asset._instances[self.__class__.__name__]:
-                self.__dict__ = Asset._instances[self.__class__.__name__][name].__dict__
-                # logging.warn(f"Duplicate creation of {self.__class__.__name__}('{name}') consider using {self.__class__.__name__}.get('{name}')")
+        if self.__class__.__name__ in Asset._instances: #e.g Boundary
+            if self.name in Asset._instances[self.__class__.__name__]: # eg Boundary.name == "Internet"
+                self.__dict__ = Asset._instances[self.__class__.__name__][self.name].__dict__ # Make both Boundary objects of "internet" have the same dict
             else:
-                Asset._instances[self.__class__.__name__][name] = self
+                Asset._instances[self.__class__.__name__][self.name] = self
         else:
-            Asset._instances[self.__class__.__name__] = {name: self}
+            Asset._instances[self.__class__.__name__] = {self.name: self}
 
     # Magic str/object function
-    def inBoundary(self, boundary):
+    def inBoundary(self, boundary: Union[Boundary,str]):
         if isinstance(boundary, Boundary):
             self.boundary = boundary
         elif isinstance(boundary, str):
-            try:
-                self.boundary = Boundary.get(boundary)
-            except:
-                self.boundary = Boundary(boundary)
+            self.boundary = Boundary(boundary)
         else:
             assert False, "Bad type to inBoundary"
         return self
@@ -377,7 +371,7 @@ class Asset(object):
         return self
 
     # static / non-instantiated i.e no 'self'
-    def get(className, instanceName):
+    def _get(className, instanceName):
         assert className in Asset._instances
 
         if instanceName in Asset._instances[className]:
@@ -555,11 +549,12 @@ class DataFlow(object):
 
 def renderDfd(graph: Digraph, title: str, outputDir: str):
     graph.render(f"{outputDir}/{title}-dfd", format="png", view=False)
-    print(graph)
+    #print(graph)
     return f"{title}-dfd.png"
 
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
+    print(f"Entering DFD: {title}")
     graph = Digraph(title)
     graph.attr(rankdir="LR", color="blue")
     graph.attr("node", fontname="Arial", fontsize="14")
@@ -581,31 +576,34 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
     for flow in scenes[title]:
         # print(flow)
         for e in (flow.pitcher, flow.catcher):
-            if e.name in placements:
-                continue  # skip to next loop
-
-            ptr = e
-            while hasattr(ptr, "boundary"):
-                if ptr.boundary not in boundaryClusters:
-                    boundaryClusters[ptr.boundary] = Digraph(
-                        name=f"cluster_{ptr.boundary.name}",
-                        graph_attr=clusterAttr | {"label": ptr.boundary.name},
-                    )
-                ptr = ptr.boundary
-
-            if hasattr(e, "boundary"):
-                placements[e.name] = boundaryClusters[e.boundary]
-            else:
-                placements[e.name] = graph
+            if e.name not in placements.keys():
+                # print(f"\n{e.name} not in\n{placements.keys()}")
+                if hasattr(e, "boundary"):
+                    ptr = e
+                    while hasattr(ptr, "boundary"):
+                        if ptr.boundary.name not in boundaryClusters:
+                            boundaryClusters[ptr.boundary.name] = Digraph(
+                                name=f"cluster_{ptr.boundary.name}",
+                                graph_attr=clusterAttr | {"label": ptr.boundary.name},
+                            )
+                        ptr = ptr.boundary
+                    
+                    placements[e.name] = boundaryClusters[e.boundary.name]
+                    # print(f"Placing {e.name} in {boundaryClusters[e.boundary]}")
+                else:
+                    placements[e.name] = graph
+                    # print(f"Placing {e.name} in graph")
 
     # Place nodes in Graphs, ready for subgraphing
     for n in placements:
         placements[n].node(n)
+        #print(f"{n} : {id(placements[n])} : {placements[n]}")
 
     # Subgraph the nodes
     for c in boundaryClusters:
-        if hasattr(c, "boundary"):
-            boundaryClusters[c.boundary].subgraph(boundaryClusters[c])
+        b = Boundary(c) # The boundary name
+        if hasattr(b, "boundary"):
+            boundaryClusters[b.boundary.name].subgraph(boundaryClusters[c])
         else:
             graph.subgraph(boundaryClusters[c])
 
@@ -630,7 +628,7 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
                 edges[(flow.catcher.name, flow.pitcher.name)] = "both"
 
         for edge in edges:
-            print(edge)
+            # print(edge)
             graph.edge(edge[0], edge[1], dir=edges[edge])
 
     else:  # simplified is False
@@ -643,6 +641,8 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
             else:
                 graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter})")
             flowCounter += 1
+    
+    print("Exiting DFD")
 
     return graph
 

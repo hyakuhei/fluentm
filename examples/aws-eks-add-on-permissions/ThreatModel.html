@@ -64,9 +64,9 @@
                 
                 <td>User</td>
                 
-                <td>IAM API</td>
+                <td>EKS</td>
                 
-                <td>TLS( SIGV4( Create OIDC provider ) )</td>
+                <td>TLS( SIGV4( Create OIDC endpoint ) )</td>
                 
                 </tr>
                 
@@ -75,11 +75,25 @@
                 
                 <td>2</td>
                 
-                <td>IAM API</td>
+                <td>EKS</td>
                 
                 <td>User</td>
                 
-                <td>TLS( OIDC URL )</td>
+                <td>Plaintext( OIDC provider URL )</td>
+                
+                </tr>
+                
+            
+                <tr>
+                
+                <td>3</td>
+                
+                <td>User</td>
+                
+                <td>IAM</td>
+                
+                <td>TLS( SIGV4( Add OIDC provider,
+ OIDC provider URL ) )</td>
                 
                 </tr>
                 
@@ -110,7 +124,7 @@
                 
                 <td>User</td>
                 
-                <td>IAM API</td>
+                <td>IAM</td>
                 
                 <td>TLS( SIGV4( Create Policy ) )</td>
                 
@@ -121,7 +135,7 @@
                 
                 <td>2</td>
                 
-                <td>IAM API</td>
+                <td>IAM</td>
                 
                 <td>User</td>
                 
@@ -136,7 +150,7 @@
                 
                 <td>User</td>
                 
-                <td>IAM API</td>
+                <td>IAM</td>
                 
                 <td>TLS( SIGV4( Create Role,
 Trusted Entity: Web Identity,
@@ -150,7 +164,7 @@ Attach Policy: Policy ARN ) )</td>
                 
                 <td>4</td>
                 
-                <td>IAM API</td>
+                <td>IAM</td>
                 
                 <td>User</td>
                 
@@ -218,7 +232,7 @@ Attach Policy: Policy ARN ) )</td>
                 
                 <td>User</td>
                 
-                <td>EKS API</td>
+                <td>EKS</td>
                 
                 <td>TLS( SIGV4( Create add-on CNI,
 Cluster: $clusterID ) )</td>
@@ -230,11 +244,11 @@ Cluster: $clusterID ) )</td>
                 
                 <td>2</td>
                 
-                <td>EKS API</td>
+                <td>EKS</td>
                 
                 <td>Kube API</td>
                 
-                <td>TLS( Create deployment CNI addon
+                <td>TLS( Deployment Spec:  CNI addon
 Role: Role ARN )</td>
                 
                 </tr>
@@ -246,9 +260,9 @@ Role: Role ARN )</td>
                 
                 <td>Kube API</td>
                 
-                <td>aws-iam-authenticator</td>
+                <td>eks-pod-identity-webhook</td>
                 
-                <td>TLS( Get sts token )</td>
+                <td>TLS( Pod Spec )</td>
                 
                 </tr>
                 
@@ -257,12 +271,12 @@ Role: Role ARN )</td>
                 
                 <td>4</td>
                 
-                <td>aws-iam-authenticator</td>
+                <td>eks-pod-identity-webhook</td>
                 
-                <td>IAM API</td>
+                <td>Kube API</td>
                 
-                <td>TLS( STS Assume Role,
- with web identity )</td>
+                <td>TLS( Mutated Pod Spec,
+Add projected token to spec )</td>
                 
                 </tr>
                 
@@ -271,11 +285,11 @@ Role: Role ARN )</td>
                 
                 <td>5</td>
                 
-                <td>IAM API</td>
+                <td>eks-pod-identity-webhook</td>
                 
-                <td>aws-iam-authenticator</td>
+                <td>eks-pod-identity-webhook</td>
                 
-                <td>TLS( JWT STS Token )</td>
+                <td>Internal( Meep )</td>
                 
                 </tr>
                 
@@ -284,11 +298,12 @@ Role: Role ARN )</td>
                 
                 <td>6</td>
                 
-                <td>aws-iam-authenticator</td>
-                
                 <td>Kube API</td>
                 
-                <td>TLS( JWT STS Token )</td>
+                <td>Kubelet</td>
+                
+                <td>TLS( Launch Pod,
+Pod Spec )</td>
                 
                 </tr>
                 
@@ -297,7 +312,7 @@ Role: Role ARN )</td>
                 
                 <td>7</td>
                 
-                <td>Kube API</td>
+                <td>Kubelet</td>
                 
                 <td>CNI Pod</td>
                 
@@ -335,9 +350,11 @@ JWT STS Token )</td>
                 
                 <td>CNI Pod</td>
                 
-                <td>VPC API</td>
+                <td>VPC</td>
                 
-                <td>TLS( Update VPC configuration )</td>
+                <td>TLS( Update VPC configuration,
+STS token,
+Operates as Role ARN )</td>
                 
                 </tr>
                 

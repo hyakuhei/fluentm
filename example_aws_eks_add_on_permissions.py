@@ -11,21 +11,26 @@ scenes = {
     "Create an IAM OIDC provider for cluster":[
         DataFlow(
             Actor("User"),
-            Process("IAM API").inBoundary(Boundary("IAM CP").inBoundary("AWS SVCs")),
-            TLS(SIGV4("Create OIDC provider")),
-            response=TLS("OIDC URL")
+            Process("EKS").inBoundary("AWS SVCs"),
+            TLS(SIGV4("Create OIDC endpoint")),
+            response="OIDC provider URL"
+        ),
+        DataFlow(
+            Actor("User"),
+            Process("IAM").inBoundary("AWS SVCs"),
+            TLS(SIGV4("Add OIDC provider,\n OIDC provider URL"))
             )
     ],
     "Create an IAM policy & role to allow CPI addon to manage VPC":[
         DataFlow(
             Actor("User"),
-            Process("IAM API"),
+            Process("IAM"),
             TLS(SIGV4("Create Policy")),
             response = TLS("Policy ARN")
         ),
         DataFlow(
             Actor("User"),
-            Process("IAM API"),
+            Process("IAM"),
             TLS(SIGV4("Create Role,\nTrusted Entity: Web Identity,\nIdentity Provider: OIDC URL,\nAttach Policy: Policy ARN")),
             response=TLS("Role ARN")
         )
@@ -40,40 +45,35 @@ scenes = {
     "Deploy Addon":[
         DataFlow(
             Actor("User"),
-            Process("EKS API").inBoundary(Boundary("EKS CP").inBoundary(Boundary("AWS SVCs"))),
+            Process("EKS"),
             TLS(SIGV4("Create add-on CNI,\nCluster: $clusterID"))
         ),
         DataFlow(
-            Process("EKS API"),
+            Process("EKS"),
             Process("Kube API"),
-            TLS("Create deployment CNI addon\nRole: Role ARN")
+            TLS("Deployment Spec:  CNI addon\nRole: Role ARN")
         ),
         DataFlow(
             Process("Kube API"),
-            Process("aws-iam-authenticator").inBoundary("Kubernetes Control Plane"),
-            TLS("Get sts token")
-        ),
-        DataFlow(
-            Process("aws-iam-authenticator"),
-            Process("IAM API"),
-            TLS("STS Assume Role,\n with web identity"),
-            response=TLS("JWT STS Token")
-        ),
-        DataFlow(
-            Process("aws-iam-authenticator"),
-            Process("Kube API"),
-            TLS("JWT STS Token")
+            Process("eks-pod-identity-webhook").inBoundary(Boundary("Kubernetes Control Plane")),
+            TLS("Pod Spec"),
+            response=TLS("Mutated Pod Spec,\nAdd projected token to spec")
         ),
         DataFlow(
             Process("Kube API"),
-            Process("CNI Pod").inBoundary(Boundary("Kubernetes Data Plane").inBoundary("Customer Account")),
+            Process("Kubelet").inBoundary(Boundary("Kubernetes Data Plane").inBoundary(Boundary("Customer Account"))),
+            TLS("Launch Pod,\nPod Spec")
+        ),
+        DataFlow(
+            Process("Kubelet"),
+            Process("CNI Pod").inBoundary(Boundary("Kubernetes Data Plane")),
             TLS("Launch Pod,\nsvcacct $acct,\nRole ARN,\nJWT STS Token")
-        )
+        ),
     ],
     "CNI configures VPC":[
         DataFlow(
             Process("CNI Pod"),
-            Process("VPC API").inBoundary(Boundary("VPC CP").inBoundary(Boundary("AWS SVCs"))),
+            Process("VPC").inBoundary(Boundary("AWS SVCs")),
             TLS("Update VPC configuration,\nSTS token,\nOperates as Role ARN")
         ),
     ]

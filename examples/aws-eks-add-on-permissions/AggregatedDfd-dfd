@@ -29,7 +29,6 @@ digraph all {
 	User -> "Kube API" [dir=forward]
 	EKS -> "Kube API" [dir=forward]
 	"Kube API" -> "eks-pod-identity-webhook" [dir=both]
-	"eks-pod-identity-webhook" -> "eks-pod-identity-webhook" [dir=forward]
 	"Kube API" -> Kubelet [dir=forward]
 	Kubelet -> "CNI Pod" [dir=forward]
 	"CNI Pod" -> VPC [dir=forward]

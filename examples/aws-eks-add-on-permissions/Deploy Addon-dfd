@@ -29,10 +29,9 @@ Role: Role ARN"]
 	"Kube API" -> "eks-pod-identity-webhook" [label="(3) Pod Spec"]
 	"eks-pod-identity-webhook" -> "Kube API" [label="(4) Mutated Pod Spec,
 Add projected token to spec"]
-	"eks-pod-identity-webhook" -> "eks-pod-identity-webhook" [label="(5) Meep"]
-	"Kube API" -> Kubelet [label="(6) Launch Pod,
+	"Kube API" -> Kubelet [label="(5) Launch Pod,
 Pod Spec"]
-	Kubelet -> "CNI Pod" [label="(7) Launch Pod,
+	Kubelet -> "CNI Pod" [label="(6) Launch Pod,
 svcacct $acct,
 Role ARN,
 JWT STS Token"]

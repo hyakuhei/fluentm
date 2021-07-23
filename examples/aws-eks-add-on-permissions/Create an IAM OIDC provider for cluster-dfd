@@ -1,0 +1,14 @@
+digraph "Create an IAM OIDC provider for cluster" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	User
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		EKS
+		IAM
+	}
+	User -> EKS [label="(1) Create OIDC endpoint"]
+	EKS -> User [label="(2) OIDC provider URL"]
+	User -> IAM [label="(3) Add OIDC provider,
+ OIDC provider URL"]
+}

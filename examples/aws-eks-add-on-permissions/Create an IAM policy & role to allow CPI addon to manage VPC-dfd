@@ -1,0 +1,16 @@
+digraph "Create an IAM policy & role to allow CPI addon to manage VPC" {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	User
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		IAM
+	}
+	User -> IAM [label="(1) Create Policy"]
+	IAM -> User [label="(2) Policy ARN"]
+	User -> IAM [label="(3) Create Role,
+Trusted Entity: Web Identity,
+Identity Provider: OIDC URL,
+Attach Policy: Policy ARN"]
+	IAM -> User [label="(4) Role ARN"]
+}

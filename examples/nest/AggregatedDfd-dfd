@@ -13,18 +13,17 @@ digraph all {
 	}
 	subgraph "cluster_B Outer" {
 		graph [color=red fontname=Arial fontsize=12 label="B Outer" line=dotted]
+		Charlie
 		subgraph "cluster_B Mid" {
 			graph [color=red fontname=Arial fontsize=12 label="B Mid" line=dotted]
 			subgraph "cluster_B Inner" {
 				graph [color=red fontname=Arial fontsize=12 label="B Inner" line=dotted]
 				Bob
+				Geoff
 			}
 		}
 	}
-	subgraph "cluster_B Outer" {
-		graph [color=red fontname=Arial fontsize=12 label="B Outer" line=dotted]
-		Charlie
-	}
 	Alice -> Bob [dir=both]
 	Charlie -> Alice [dir=forward]
+	Geoff -> Bob [dir=forward]
 }

@@ -1,0 +1,35 @@
+digraph all {
+	color=blue rankdir=LR
+	node [fontname=Arial fontsize=14]
+	User
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		EKS
+		IAM
+		VPC
+	}
+	subgraph "cluster_Single Tenant VPC" {
+		graph [color=red fontname=Arial fontsize=12 label="Single Tenant VPC" line=dotted]
+		subgraph "cluster_Kubernetes Control Plane" {
+			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Control Plane" line=dotted]
+			"Kube API"
+			"eks-pod-identity-webhook"
+		}
+	}
+	subgraph "cluster_Customer Account" {
+		graph [color=red fontname=Arial fontsize=12 label="Customer Account" line=dotted]
+		subgraph "cluster_Kubernetes Data Plane" {
+			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Data Plane" line=dotted]
+			Kubelet
+			"CNI Pod"
+		}
+	}
+	User -> EKS [dir=both]
+	User -> IAM [dir=both]
+	User -> "Kube API" [dir=forward]
+	EKS -> "Kube API" [dir=forward]
+	"Kube API" -> "eks-pod-identity-webhook" [dir=both]
+	"Kube API" -> Kubelet [dir=forward]
+	Kubelet -> "CNI Pod" [dir=forward]
+	"CNI Pod" -> VPC [dir=forward]
+}

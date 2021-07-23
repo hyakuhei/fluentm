@@ -1,25 +1,23 @@
 digraph "API traffic" {
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
-	"AWS IAM"
 	subgraph "cluster_User Machine" {
 		graph [color=red fontname=Arial fontsize=12 label="User Machine" line=dotted]
 		kubectl
 	}
-	subgraph "cluster_EKS Cluster" {
-		graph [color=red fontname=Arial fontsize=12 label="EKS Cluster" line=dotted]
-		"k8s api"
+	subgraph "cluster_AWS Cloud" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS Cloud" line=dotted]
+		"AWS STS"
+		subgraph "cluster_EKS Cluster" {
+			graph [color=red fontname=Arial fontsize=12 label="EKS Cluster" line=dotted]
+			"Kubernetes API"
+			"aws-iam-authenticator"
+		}
 	}
-	subgraph "cluster_EKS Data Plane" {
-		graph [color=red fontname=Arial fontsize=12 label="EKS Data Plane" line=dotted]
-		"aws-iam-authenticator"
-		"aws-auth"
-	}
-	kubectl -> "k8s api" [label="(1) STS token in HTTP header"]
-	"k8s api" -> "aws-iam-authenticator" [label="(2) STS Request from token"]
-	"aws-iam-authenticator" -> "AWS IAM" [label="(3) STS Request"]
-	"AWS IAM" -> "aws-iam-authenticator" [label="(4) ?"]
-	"aws-iam-authenticator" -> "aws-auth" [label="(5) Config Map"]
-	"aws-iam-authenticator" -> "k8s api" [label="(6) Read Mapped usernames"]
-	"k8s api" -> "aws-iam-authenticator" [label="(7) Config Map"]
+	kubectl -> "Kubernetes API" [label="(1) pre-signed URL as Bearer Token HTTP Header"]
+	"Kubernetes API" -> "aws-iam-authenticator" [label="(2) TokenReview request with pre-signed URL"]
+	"aws-iam-authenticator" -> "AWS STS" [label="(3) sts:GetCallerIdentity request"]
+	"AWS STS" -> "aws-iam-authenticator" [label="(4) sts:GetCallerIdentity response"]
+	"aws-iam-authenticator" -> "Kubernetes API" [label="(5) TokenReview response with username"]
+	"aws-iam-authenticator" -> "Kubernetes API" [label="(6) Async Watch mapped aws-auth ConfigMap "]
 }

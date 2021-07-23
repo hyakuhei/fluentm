@@ -100,6 +100,34 @@ class DHCP(Plaintext):
         super().__init__(toWrap)
 
 
+class Exec(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            signed=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None,
+        )
+
+
+class Stdout(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            signed=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None,
+        )
+
+
 class Internal(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(

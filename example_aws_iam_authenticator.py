@@ -1,52 +1,67 @@
-from fluentm import Actor, Boundary, Process, DataFlow, HTTP, SIGV4, TLS, Unknown, SIGV4, JWS, Internal
+from fluentm import (
+    Actor,
+    Boundary,
+    Process,
+    DataFlow,
+    Exec,
+    HTTP,
+    SIGV4,
+    TLS,
+    Unknown,
+    SIGV4,
+    Stdout,
+    Internal,
+)
 from fluentm import report
 
 scenes = {
     # Example using variables, which is fine for small things but gets hard with longer flows
-    "kubectl gets pre-signed URL":[
+    "kubectl gets pre-signed URL": [
         DataFlow(
             Process("kubectl").inBoundary("User Machine"),
             Process("aws-cli").inBoundary("User Machine"),
-            Internal("Exec aws-cli get-token"),
-            ),
-        DataFlow(
-            Process("aws-cli"),
-            Process("aws-cli"),
-            Internal("Sign URL using private key")
+            Exec("Exec aws-cli get-token"),
         ),
         DataFlow(
-            Process("aws-cli"), Process("kubectl"), Internal("STS PreSigned URL")
-        )
+            Process("aws-cli"),
+            Process("aws-cli"),
+            Internal("Sign URL using AWS IAM credentials"),
+        ),
+        DataFlow(
+            Process("aws-cli"), Process("kubectl"), Stdout("STS pre-signed URL")
+        ),
     ],
     "API traffic": [
         DataFlow(
             Process("kubectl"),
-            Process("k8s api").inBoundary("EKS Data Plane").inBoundary("EKS Cluster"),
-            TLS(HTTP("STS token in HTTP header")),
+            Process("Kubernetes API").inBoundary(
+                Boundary("EKS Cluster").inBoundary("AWS Cloud")
+            ),
+            TLS(HTTP("pre-signed URL as Bearer Token HTTP Header")),
         ),
         DataFlow(
-            Process("k8s api"),
-            Process("aws-iam-authenticator").inBoundary("EKS Data Plane"),
-            Unknown("STS Request from token"),
-        ),
-        DataFlow(
-            Process("aws-iam-authenticator"),
-            Process("AWS IAM"),
-            TLS(HTTP(SIGV4("STS Request"))),
-            response=Unknown("?"),
+            Process("Kubernetes API"),
+            Process("aws-iam-authenticator").inBoundary("EKS Cluster"),
+            TLS(HTTP("TokenReview request with pre-signed URL")),
         ),
         DataFlow(
             Process("aws-iam-authenticator"),
-            Process("aws-auth").inBoundary("EKS Data Plane"),
-            Unknown("Config Map"),
+            Process("AWS STS").inBoundary("AWS Cloud"),
+            TLS(HTTP(SIGV4("sts:GetCallerIdentity request"))),
+            response=TLS(HTTP("sts:GetCallerIdentity response")),
         ),
         DataFlow(
             Process("aws-iam-authenticator"),
-            Process("k8s api"),
-            TLS(HTTP(("Read Mapped usernames"))),
-            response=TLS(HTTP("Config Map")) 
-        )
-    ]
+            Process("Kubernetes API").inBoundary("EKS Cluster"),
+            TLS(HTTP("TokenReview response with username")),
+        ),
+        DataFlow(
+            Process("aws-iam-authenticator"),
+            Process("Kubernetes API").inBoundary("EKS Cluster"),
+            TLS(HTTP(("Async Watch mapped aws-auth ConfigMap "))),
+            #response=TLS(HTTP("Config Map username mappings")),
+        ),
+    ],
 }
 
 if __name__ == "__main__":

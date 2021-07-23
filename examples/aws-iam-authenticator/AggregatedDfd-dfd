@@ -1,26 +1,23 @@
-digraph "Aggregated DFD" {
-	edge [dir=forward]
+digraph all {
 	color=blue rankdir=LR
 	node [fontname=Arial fontsize=14]
-	"AWS IAM"
 	subgraph "cluster_User Machine" {
 		graph [color=red fontname=Arial fontsize=12 label="User Machine" line=dotted]
 		kubectl
 		"aws-cli"
 	}
-	subgraph "cluster_EKS Cluster" {
-		graph [color=red fontname=Arial fontsize=12 label="EKS Cluster" line=dotted]
-		"k8s api"
+	subgraph "cluster_AWS Cloud" {
+		graph [color=red fontname=Arial fontsize=12 label="AWS Cloud" line=dotted]
+		"AWS STS"
+		subgraph "cluster_EKS Cluster" {
+			graph [color=red fontname=Arial fontsize=12 label="EKS Cluster" line=dotted]
+			"Kubernetes API"
+			"aws-iam-authenticator"
+		}
 	}
-	subgraph "cluster_EKS Data Plane" {
-		graph [color=red fontname=Arial fontsize=12 label="EKS Data Plane" line=dotted]
-		"aws-iam-authenticator"
-		"aws-auth"
-	}
-	kubectl -> "aws-cli"
-	"aws-cli" -> "aws-cli"
-	kubectl -> "k8s api"
-	"k8s api" -> "aws-iam-authenticator"
-	"aws-iam-authenticator" -> "AWS IAM"
-	"aws-iam-authenticator" -> "aws-auth"
+	kubectl -> "aws-cli" [dir=both]
+	"aws-cli" -> "aws-cli" [dir=forward]
+	kubectl -> "Kubernetes API" [dir=forward]
+	"Kubernetes API" -> "aws-iam-authenticator" [dir=both]
+	"aws-iam-authenticator" -> "AWS STS" [dir=both]
 }

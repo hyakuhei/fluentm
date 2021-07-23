@@ -66,7 +66,7 @@
                 
                 <td>aws-cli</td>
                 
-                <td>Internal( Exec aws-cli get-token )</td>
+                <td>Exec( Exec aws-cli get-token )</td>
                 
                 </tr>
                 
@@ -79,7 +79,7 @@
                 
                 <td>aws-cli</td>
                 
-                <td>Internal( Sign URL using private key )</td>
+                <td>Internal( Sign URL using AWS IAM credentials )</td>
                 
                 </tr>
                 
@@ -92,7 +92,7 @@
                 
                 <td>kubectl</td>
                 
-                <td>Internal( STS PreSigned URL )</td>
+                <td>Stdout( STS pre-signed URL )</td>
                 
                 </tr>
                 
@@ -123,9 +123,9 @@
                 
                 <td>kubectl</td>
                 
-                <td>k8s api</td>
+                <td>Kubernetes API</td>
                 
-                <td>TLS( HTTP( STS token in HTTP header ) )</td>
+                <td>TLS( HTTP( pre-signed URL as Bearer Token HTTP Header ) )</td>
                 
                 </tr>
                 
@@ -134,11 +134,11 @@
                 
                 <td>2</td>
                 
-                <td>k8s api</td>
+                <td>Kubernetes API</td>
                 
                 <td>aws-iam-authenticator</td>
                 
-                <td>Unknown( STS Request from token )</td>
+                <td>TLS( HTTP( TokenReview request with pre-signed URL ) )</td>
                 
                 </tr>
                 
@@ -149,9 +149,9 @@
                 
                 <td>aws-iam-authenticator</td>
                 
-                <td>AWS IAM</td>
+                <td>AWS STS</td>
                 
-                <td>TLS( HTTP( SIGV4( STS Request ) ) )</td>
+                <td>TLS( HTTP( SIGV4( sts:GetCallerIdentity request ) ) )</td>
                 
                 </tr>
                 
@@ -160,11 +160,11 @@
                 
                 <td>4</td>
                 
-                <td>AWS IAM</td>
+                <td>AWS STS</td>
                 
                 <td>aws-iam-authenticator</td>
                 
-                <td>Unknown( ? )</td>
+                <td>TLS( HTTP( sts:GetCallerIdentity response ) )</td>
                 
                 </tr>
                 
@@ -175,9 +175,9 @@
                 
                 <td>aws-iam-authenticator</td>
                 
-                <td>aws-auth</td>
+                <td>Kubernetes API</td>
                 
-                <td>Unknown( Config Map )</td>
+                <td>TLS( HTTP( TokenReview response with username ) )</td>
                 
                 </tr>
                 
@@ -188,22 +188,9 @@
                 
                 <td>aws-iam-authenticator</td>
                 
-                <td>k8s api</td>
+                <td>Kubernetes API</td>
                 
-                <td>TLS( HTTP( Read Mapped usernames ) )</td>
-                
-                </tr>
-                
-            
-                <tr>
-                
-                <td>7</td>
-                
-                <td>k8s api</td>
-                
-                <td>aws-iam-authenticator</td>
-                
-                <td>TLS( HTTP( Config Map ) )</td>
+                <td>TLS( HTTP( Async Watch mapped aws-auth ConfigMap  ) )</td>
                 
                 </tr>
                 

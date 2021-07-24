@@ -559,14 +559,30 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
     graph = Digraph(title)
-    graph.attr(rankdir="LR", color="blue")
-    graph.attr("node", fontname="Arial", fontsize="14")
+    graph.attr(
+        rankdir="LR",
+        color="blue",
+        fontname="Arial"
+        )
+    graph.attr(
+        "node",
+        fontname="Arial",
+        fontsize="11",
+        shape="box",
+        style="rounded",
+    )
+    graph.attr(
+        "edge",
+        fontname="Arial",
+        fontsize="11"
+    )
+    # This will break tests!
 
     clusterAttr = {
         "fontname": "Arial",
-        "fontsize": "12",
+        "fontsize": "11",
         "color": "red",
-        "line": "dotted",
+        "style": "dashed"
     }
 
     boundaryClusters = {}

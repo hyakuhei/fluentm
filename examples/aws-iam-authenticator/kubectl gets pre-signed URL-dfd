@@ -7,6 +7,6 @@ digraph "kubectl gets pre-signed URL" {
 		"aws-cli"
 	}
 	kubectl -> "aws-cli" [label="(1) Exec aws-cli get-token"]
-	"aws-cli" -> "aws-cli" [label="(2) Sign URL using private key"]
-	"aws-cli" -> kubectl [label="(3) STS PreSigned URL"]
+	"aws-cli" -> "aws-cli" [label="(2) Sign URL using AWS IAM credentials"]
+	"aws-cli" -> kubectl [label="(3) STS pre-signed URL"]
 }

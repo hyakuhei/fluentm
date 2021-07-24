@@ -1,9 +1,10 @@
 digraph "Tink API traffic" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	"tink-cli"
 	subgraph "cluster_Tink Control Plane Network" {
-		graph [color=red fontname=Arial fontsize=12 label="Tink Control Plane Network" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="Tink Control Plane Network" style=dashed]
 		"Tink API"
 		boots
 		Nginx
@@ -11,7 +12,7 @@ digraph "Tink API traffic" {
 		Hegel
 	}
 	subgraph "cluster_On Premise Network" {
-		graph [color=red fontname=Arial fontsize=12 label="On Premise Network" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="On Premise Network" style=dashed]
 		Machine
 	}
 	"tink-cli" -> "Tink API" [label="(1) API request"]

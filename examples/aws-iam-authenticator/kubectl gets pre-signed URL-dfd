@@ -1,8 +1,9 @@
 digraph "kubectl gets pre-signed URL" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph "cluster_User Machine" {
-		graph [color=red fontname=Arial fontsize=12 label="User Machine" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="User Machine" style=dashed]
 		kubectl
 		"aws-cli"
 	}

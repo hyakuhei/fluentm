@@ -1,0 +1,25 @@
+digraph all {
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
+	"tink-cli"
+	subgraph "cluster_Tink Control Plane Network" {
+		graph [color=red fontname=Arial fontsize=11 label="Tink Control Plane Network" style=dashed]
+		"Tink API"
+		boots
+		Nginx
+		"Container Registry"
+		Hegel
+	}
+	subgraph "cluster_On Premise Network" {
+		graph [color=red fontname=Arial fontsize=11 label="On Premise Network" style=dashed]
+		Machine
+	}
+	"tink-cli" -> "Tink API" [dir=forward]
+	Machine -> boots [dir=forward]
+	boots -> "Tink API" [dir=forward]
+	Machine -> Nginx [dir=forward]
+	Machine -> "Tink API" [dir=forward]
+	Machine -> "Container Registry" [dir=forward]
+	Machine -> Hegel [dir=forward]
+}

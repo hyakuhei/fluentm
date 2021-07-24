@@ -1,15 +1,15 @@
-digraph "Aggregated DFD" {
-	edge [dir=both]
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+digraph all {
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	Security
 	Developer
 	"Review Meeting"
 	subgraph "cluster_Version Control" {
-		graph [color=red fontname=Arial fontsize=12 label="Version Control" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="Version Control" style=dashed]
 		ThreatModel
 	}
-	Security -> ThreatModel
-	Developer -> ThreatModel
-	ThreatModel -> "Review Meeting"
+	Security -> ThreatModel [dir=forward]
+	Developer -> ThreatModel [dir=forward]
+	ThreatModel -> "Review Meeting" [dir=both]
 }

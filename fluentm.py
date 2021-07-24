@@ -177,6 +177,7 @@ class IPSEC(WrappableProtocol):
         super().__init__(
             toWrap,
             encrypted=True,
+            signed=False,
             serverAuthenticated=True,
             clientAuthenticated=True,
             serverCredential="x509",  # TODO: Replace with a type? Would that be useful?
@@ -189,6 +190,7 @@ class TLSVPN(WrappableProtocol):
         super().__init__(
             toWrap,
             encrytped=True,
+            signed=False,
             serverAuthenticated=True,
             clientAuthenticated=False,
             serverCredential="x509",  # TODO: Replace with a type? Would that be useful?
@@ -202,6 +204,7 @@ class MTLS(WrappableProtocol):
             toWrap,
             encrypted=True,
             version=None,
+            signed=False,
             serverAuthenticated=True,
             clientAuthenticated=True,
             serverCredential="x509",

@@ -1,25 +1,26 @@
 digraph all {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	User
 	subgraph "cluster_AWS SVCs" {
-		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="AWS SVCs" style=dashed]
 		EKS
 		IAM
 		VPC
 	}
 	subgraph "cluster_Single Tenant VPC" {
-		graph [color=red fontname=Arial fontsize=12 label="Single Tenant VPC" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="Single Tenant VPC" style=dashed]
 		subgraph "cluster_Kubernetes Control Plane" {
-			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Control Plane" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Control Plane" style=dashed]
 			"Kube API"
 			"eks-pod-identity-webhook"
 		}
 	}
 	subgraph "cluster_Customer Account" {
-		graph [color=red fontname=Arial fontsize=12 label="Customer Account" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="Customer Account" style=dashed]
 		subgraph "cluster_Kubernetes Data Plane" {
-			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Data Plane" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
 			Kubelet
 			"CNI Pod"
 		}

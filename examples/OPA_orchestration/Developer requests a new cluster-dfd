@@ -1,20 +1,21 @@
 digraph "Developer requests a new cluster" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	Developer
 	subgraph "cluster_Control Cluster" {
-		graph [color=red fontname=Arial fontsize=12 label="Control Cluster" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="Control Cluster" style=dashed]
 		"Cluster Orchestrator"
 	}
 	subgraph cluster_AWS {
-		graph [color=red fontname=Arial fontsize=12 label=AWS line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=AWS style=dashed]
 		IAM
 		EKS
 	}
 	subgraph "cluster_New AWS Account" {
-		graph [color=red fontname=Arial fontsize=12 label="New AWS Account" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="New AWS Account" style=dashed]
 		subgraph "cluster_New Kubernetes Cluster" {
-			graph [color=red fontname=Arial fontsize=12 label="New Kubernetes Cluster" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="New Kubernetes Cluster" style=dashed]
 			"k8s API"
 		}
 	}

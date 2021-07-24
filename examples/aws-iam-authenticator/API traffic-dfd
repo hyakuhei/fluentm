@@ -1,15 +1,16 @@
 digraph "API traffic" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph "cluster_User Machine" {
-		graph [color=red fontname=Arial fontsize=12 label="User Machine" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="User Machine" style=dashed]
 		kubectl
 	}
 	subgraph "cluster_AWS Cloud" {
-		graph [color=red fontname=Arial fontsize=12 label="AWS Cloud" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="AWS Cloud" style=dashed]
 		"AWS STS"
 		subgraph "cluster_EKS Cluster" {
-			graph [color=red fontname=Arial fontsize=12 label="EKS Cluster" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="EKS Cluster" style=dashed]
 			"Kubernetes API"
 			"aws-iam-authenticator"
 		}

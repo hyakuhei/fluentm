@@ -1,41 +1,31 @@
-digraph "Aggregated DFD" {
-	edge [dir=both]
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+digraph all {
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph cluster_Internet {
-		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=Internet style=dashed]
 		Customer
 	}
 	subgraph "cluster_Tiaga Co" {
-		graph [color=red fontname=Arial fontsize=12 label="Tiaga Co" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="Tiaga Co" style=dashed]
 		subgraph "cluster_Front End Systems" {
-			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="Front End Systems" style=dashed]
 			"Web Server"
 		}
 	}
-	subgraph "cluster_Tiaga Co" {
-		graph [color=red fontname=Arial fontsize=12 label="Tiaga Co" line=dotted]
-		subgraph cluster_Databases {
-			graph [color=red fontname=Arial fontsize=12 label=Databases line=dotted]
-			"Content DB"
-		}
-	}
 	subgraph cluster_Logistics {
-		graph [color=red fontname=Arial fontsize=12 label=Logistics line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=Logistics style=dashed]
 		"Order Resolver"
 	}
 	subgraph cluster_Warehouse {
-		graph [color=red fontname=Arial fontsize=12 label=Warehouse line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=Warehouse style=dashed]
 		"Label Printer"
-	}
-	subgraph cluster_Warehouse {
-		graph [color=red fontname=Arial fontsize=12 label=Warehouse line=dotted]
 		"Warehouse Notifier"
 	}
-	Customer -> "Web Server"
-	"Web Server" -> "Content DB"
-	"Web Server" -> "Stock DB"
-	"Web Server" -> "Merchant API"
-	"Order Resolver" -> "Label Printer"
-	"Order Resolver" -> "Warehouse Notifier"
+	Customer -> "Web Server" [dir=both]
+	"Web Server" -> "Content DB" [dir=both]
+	"Web Server" -> "Stock DB" [dir=both]
+	"Web Server" -> "Merchant API" [dir=both]
+	"Order Resolver" -> "Label Printer" [dir=both]
+	"Order Resolver" -> "Warehouse Notifier" [dir=both]
 }

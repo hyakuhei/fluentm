@@ -1,15 +1,16 @@
 digraph "CNI configures VPC" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph "cluster_Customer Account" {
-		graph [color=red fontname=Arial fontsize=12 label="Customer Account" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="Customer Account" style=dashed]
 		subgraph "cluster_Kubernetes Data Plane" {
-			graph [color=red fontname=Arial fontsize=12 label="Kubernetes Data Plane" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
 			"CNI Pod"
 		}
 	}
 	subgraph "cluster_AWS SVCs" {
-		graph [color=red fontname=Arial fontsize=12 label="AWS SVCs" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="AWS SVCs" style=dashed]
 		VPC
 	}
 	"CNI Pod" -> VPC [label="(1) Update VPC configuration,

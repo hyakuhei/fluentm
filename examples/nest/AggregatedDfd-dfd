@@ -1,23 +1,24 @@
 digraph all {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph "cluster_A Outer" {
-		graph [color=red fontname=Arial fontsize=12 label="A Outer" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="A Outer" style=dashed]
 		subgraph "cluster_A Mid" {
-			graph [color=red fontname=Arial fontsize=12 label="A Mid" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="A Mid" style=dashed]
 			subgraph "cluster_A Inner" {
-				graph [color=red fontname=Arial fontsize=12 label="A Inner" line=dotted]
+				graph [color=red fontname=Arial fontsize=11 label="A Inner" style=dashed]
 				Alice
 			}
 		}
 	}
 	subgraph "cluster_B Outer" {
-		graph [color=red fontname=Arial fontsize=12 label="B Outer" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="B Outer" style=dashed]
 		Charlie
 		subgraph "cluster_B Mid" {
-			graph [color=red fontname=Arial fontsize=12 label="B Mid" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="B Mid" style=dashed]
 			subgraph "cluster_B Inner" {
-				graph [color=red fontname=Arial fontsize=12 label="B Inner" line=dotted]
+				graph [color=red fontname=Arial fontsize=11 label="B Inner" style=dashed]
 				Bob
 				Geoff
 			}

@@ -18,8 +18,9 @@ scenes = {
 # Be careful with these, they have to be tabs, not spaces
 expectedResults = {
     "Test ABC": """digraph "Test ABC" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	A
 	B
 	C
@@ -27,10 +28,11 @@ expectedResults = {
 	B -> C [label="(2) Edge 2"]
 }""",
     "Test DEInOneBoundary": """digraph "Test DEInOneBoundary" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph cluster_BOUNDARY {
-		graph [color=red fontname=Arial fontsize=12 label=BOUNDARY line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=BOUNDARY style=dashed]
 		D
 		E
 	}

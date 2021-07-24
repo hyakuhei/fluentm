@@ -27,14 +27,15 @@ scenes = {
 
 expectedResults = {
     "Warehouse packages order": """digraph "Warehouse packages order" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph cluster_Logistics {
-		graph [color=red fontname=Arial fontsize=12 label=Logistics line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=Logistics style=dashed]
 		"Order Resolver"
 	}
 	subgraph cluster_Warehouse {
-		graph [color=red fontname=Arial fontsize=12 label=Warehouse line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=Warehouse style=dashed]
 		"Label Printer"
 		"Warehouse Notifier"
 	}

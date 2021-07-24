@@ -58,16 +58,17 @@ scenes = {
 
 expectedResults = {
     "Customer views book online": """digraph "Customer views book online" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph cluster_Internet {
-		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=Internet style=dashed]
 		Customer
 	}
 	subgraph "cluster_BookStore Co" {
-		graph [color=red fontname=Arial fontsize=12 label="BookStore Co" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="BookStore Co" style=dashed]
 		subgraph "cluster_Front End Systems" {
-			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="Front End Systems" style=dashed]
 			"Web Server"
 		}
 	}
@@ -79,16 +80,17 @@ expectedResults = {
 	"Web Server" -> Customer [label="(6) Rendered Item Information"]
 }""",
     "Customer buys book": """digraph "Customer buys book" {
-	color=blue rankdir=LR
-	node [fontname=Arial fontsize=14]
+	color=blue fontname=Arial rankdir=LR
+	node [fontname=Arial fontsize=11 shape=box style=rounded]
+	edge [fontname=Arial fontsize=11]
 	subgraph cluster_Internet {
-		graph [color=red fontname=Arial fontsize=12 label=Internet line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label=Internet style=dashed]
 		Customer
 	}
 	subgraph "cluster_BookStore Co" {
-		graph [color=red fontname=Arial fontsize=12 label="BookStore Co" line=dotted]
+		graph [color=red fontname=Arial fontsize=11 label="BookStore Co" style=dashed]
 		subgraph "cluster_Front End Systems" {
-			graph [color=red fontname=Arial fontsize=12 label="Front End Systems" line=dotted]
+			graph [color=red fontname=Arial fontsize=11 label="Front End Systems" style=dashed]
 			"Web Server"
 		}
 	}

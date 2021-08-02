@@ -1,0 +1,8 @@
+digraph {
+	graph [bgcolor=transparent fontsize=11 fontstyle=Arial]
+	node [fontsize=11 fontstyle=Arial shape=plaintext]
+	struct [label="TLS|{Launch Pod,
+svcacct $acct,
+Role ARN,
+JWT STS Token}" shape=record]
+}

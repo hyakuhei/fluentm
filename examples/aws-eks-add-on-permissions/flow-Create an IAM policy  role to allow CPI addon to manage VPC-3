@@ -1,0 +1,8 @@
+digraph {
+	graph [bgcolor=transparent fontsize=11 fontstyle=Arial]
+	node [fontsize=11 fontstyle=Arial shape=plaintext]
+	struct [label="TLS|SIGV4|{Create Role,
+Trusted Entity: Web Identity,
+Identity Provider: OIDC URL,
+Attach Policy: Policy ARN}" shape=record]
+}

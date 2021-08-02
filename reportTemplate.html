@@ -47,17 +47,43 @@
         <img src="{{ sceneReports[report]['dfdImage'] }}">
         <table id="dataFlowTable">
             <tr>
-            {% for key in sceneReports[report]['dataFlowTable'][0].keys() %}
-                <th>{{key}}</th>
-            {% endfor %}
+                <th>Flow ID</th>
+                {% if "Image Source" in sceneReports[report]['dataFlowTable'][0] %}
+                <th>Pitcher</th>
+                <th>Data Construction</th>
+                <th>Catcher</th>
+                {% else %}
+                <th>Pitcher</th>
+                <th>Catcher</th>
+                <th>Transport</th>
+                <th>Data</th>
+                {% endif %}
             </tr>
             {% for row in sceneReports[report]['dataFlowTable'] %}
                 <tr>
-                {% for rowkey in row.keys() %}
-                <td>{{row[rowkey]}}</td>
-                {% endfor %}
+                    <td>{{row["Flow ID"]}}</td>
+                    <td>{{row["Pitcher"]}}</td>
+                    {% if "Image Source" in row %} 
+                    <td>
+                        <img src="{{row['Image Source']}}">
+                    </td>
+                    <td>{{row["Catcher"]}}</td>
+                    {% else %}
+                    <td>{{row["Catcher"]}}</td>
+                    <td>
+                        {% for item in row["Transport Chain"] %}
+                            {% for i in range(loop.index) %}
+                                <strong>-</strong>
+                            {% endfor%}
+                            <strong>{{ item.__class__.__name__ }}</strong><br/>
+                        {% endfor %}
+                    </td>
+                    
+                    <td>
+                        {{ row["Data"] }}
+                    </td>
+                    {% endif %}
                 </tr>
-                
             {% endfor %}
         </table>
 

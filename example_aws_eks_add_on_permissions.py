@@ -1,4 +1,4 @@
-from fluentm import Actor, Boundary, Process, DataFlow, HTTP, SIGV4, TLS, Unknown, SIGV4, JWS, Internal
+from fluentm import Actor, Boundary, Process, DataFlow, HTTP, SIGV4, TLS, Unknown, SIGV4, JWS, Internal, Data
 from fluentm import report
 
 
@@ -12,7 +12,7 @@ scenes = {
         DataFlow(
             Actor("User"),
             Process("EKS").inBoundary("AWS SVCs"),
-            TLS(SIGV4("Create OIDC endpoint")),
+            TLS(SIGV4("Create OIDC endpoint")).addProtocolData(Data("Server x509")).addProtocolData(Data("Client x509")),
             response="OIDC provider URL"
         ),
         DataFlow(

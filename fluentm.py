@@ -166,6 +166,7 @@ class Exec(WrappableProtocol):
             version=None,
         )
 
+
 class TCP(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
@@ -179,6 +180,7 @@ class TCP(WrappableProtocol):
             version=None,
         )
 
+
 class TCPForwarded(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
@@ -191,6 +193,7 @@ class TCPForwarded(WrappableProtocol):
             clientCredential=None,
             version=None,
         )
+
 
 class Stdout(WrappableProtocol):
     def __init__(self, toWrap):
@@ -774,7 +777,7 @@ def dataFlowTable(scenes: dict, key: str, images=False, outputDir=""):
         }
 
         if images == True:
-            #print(f.wrappedData.flatDotRecordString())
+            # print(f.wrappedData.flatDotRecordString())
             dfGraph = Digraph(
                 filename=f"flow-{_safeFilename(key)}-{flowCounter}",
                 directory=outputDir,
@@ -783,7 +786,11 @@ def dataFlowTable(scenes: dict, key: str, images=False, outputDir=""):
                     "fontstyle": "Arial",
                     "bgcolor": "transparent",
                 },
-                node_attr={"fontsize": "11", "fontstyle": "Arial", "shape": "plaintext"},
+                node_attr={
+                    "fontsize": "11",
+                    "fontstyle": "Arial",
+                    "shape": "plaintext",
+                },
             )
             dfGraph.node(
                 name="struct",
@@ -793,11 +800,12 @@ def dataFlowTable(scenes: dict, key: str, images=False, outputDir=""):
             dfGraph.render(format="png")
 
             row["Image Source"] = f"flow-{_safeFilename(key)}-{flowCounter}.png"
-        
+
         table.append(row)
 
         flowCounter += 1
     return table
+
 
 def _mixinResponses(scenes, key):
     newFlows = []
@@ -809,8 +817,11 @@ def _mixinResponses(scenes, key):
             newFlows.append(DataFlow(f.catcher, f.pitcher, f.response))
     scenes[key][:] = newFlows
 
+
 def _safeFilename(filename):
-    return "".join([c for c in filename if c.isalpha() or c.isdigit() or c==' ']).rstrip()
+    return "".join(
+        [c for c in filename if c.isalpha() or c.isdigit() or c == " "]
+    ).rstrip()
 
 
 def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
@@ -827,7 +838,9 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
         sceneReports[key] = {
             "graph": graph,
             "dfdImage": renderDfd(graph, key, outputDir=outputDir),
-            "dataFlowTable": dataFlowTable(scenes, key, images=True, outputDir=outputDir),
+            "dataFlowTable": dataFlowTable(
+                scenes, key, images=True, outputDir=outputDir
+            ),
         }
 
     compoundFlows = []

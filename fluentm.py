@@ -39,6 +39,7 @@ class WrappableProtocol(object):
         self.serverCredential = serverCredential
         self.clientCredential = clientCredential
         self.version = version
+        self.protocolData = []
 
     def printChain(self, depth=0):
         print(f"{SPACES * depth} {self.__class__.__name__}")
@@ -55,13 +56,6 @@ class WrappableProtocol(object):
         else:
             print(f"{SPACES* (depth+1)} {self.wraps}")
 
-    # Recurse through all nested/wraped protocols and return the data that's ultimately wrapped
-    def getData(self):
-        if isinstance(self.wraps, Data):
-            return self.wraps  # Base case
-        else:
-            return self.wraps.getData()
-
     # Recurse and generate a single line str for the wrappable
     def flatString(self, depth=0, s=None):
         if s is None:
@@ -76,6 +70,65 @@ class WrappableProtocol(object):
                 return s
         else:
             assert False, "Bad instance type in WrappableProtocol structure"
+
+    def flatDotRecordString(self, s=None):
+        # If we are at the start of the sting, we don't need a |
+        if s is None:
+            s = ""
+
+        s += f"{self.__class__.__name__}"
+        if isinstance(self.version, Unset):
+            s = s + f"\n+{self.version}"
+
+        if len(self.protocolData) > 0:
+            s += "|{"
+            s += "|".join(x.__str__() for x in self.protocolData)
+            s += "}"
+
+        s += "|"
+
+        if isinstance(self.wraps, WrappableProtocol):
+            return self.wraps.flatDotRecordString(s)
+
+        if isinstance(self.wraps, Data):
+            s += "{"
+            s += f"{self.wraps.name}"
+            s += "}"
+            return s
+
+    # Recurse and provide a list of objects
+    # Example:
+    ## TLS(HTTP("MEEP"))
+    ## [TLS, HTTP, "MEEP"]
+    def getTransportChain(self, l=None):
+        if l is None:
+            l = []
+
+        l.append(self)
+        if isinstance(self.wraps, WrappableProtocol):
+            return self.wraps.getTransportChain(l)
+        elif isinstance(self.wraps, Data):
+            return l
+        else:
+            assert False, "Reached the unreachable"
+
+    def getNestedData(self, visited=None):
+        if visited is None:
+            visited = []  # WrappedData objects can feasibly be cyclical, that's bad.
+
+        if self in visited:
+            assert False, "Cyclic Wrapped Data"
+        else:
+            visited.append(self)
+
+        if isinstance(self.wraps, Data):
+            return self.wraps
+        else:
+            return self.wraps.getNestedData(visited)
+
+    def addProtocolData(self, d: Data):
+        self.protocolData.append(d)
+        return self
 
     def __str__(self):
         return self.flatString()
@@ -101,6 +154,34 @@ class DHCP(Plaintext):
 
 
 class Exec(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            signed=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None,
+        )
+
+
+class TCP(WrappableProtocol):
+    def __init__(self, toWrap):
+        super().__init__(
+            toWrap,
+            encrypted=False,
+            signed=False,
+            serverAuthenticated=False,
+            clientAuthenticated=False,
+            serverCredential=None,  # TODO: Replace with a type? Would that be useful?
+            clientCredential=None,
+            version=None,
+        )
+
+
+class TCPForwarded(WrappableProtocol):
     def __init__(self, toWrap):
         super().__init__(
             toWrap,
@@ -510,6 +591,9 @@ class Data(Asset):
     def get(name):
         return Asset.get("Data", name)
 
+    def __str__(self):
+        return self.name
+
 
 class Actor(Asset):
     def __init__(self, name):
@@ -568,7 +652,7 @@ class DataFlow(object):
         if label is not None:
             name = label
         else:
-            name = wrappedData.getData().name
+            name = wrappedData.getNestedData().name
 
         if response != None:
             self.response = response
@@ -590,11 +674,7 @@ def renderDfd(graph: Digraph, title: str, outputDir: str):
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
     graph = Digraph(title)
-    graph.attr(
-        rankdir="LR",
-        color="blue",
-        fontname="Arial"
-        )
+    graph.attr(rankdir="LR", color="blue", fontname="Arial")
     graph.attr(
         "node",
         fontname="Arial",
@@ -602,18 +682,14 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
         shape="box",
         style="rounded",
     )
-    graph.attr(
-        "edge",
-        fontname="Arial",
-        fontsize="11"
-    )
+    graph.attr("edge", fontname="Arial", fontsize="11")
     # This will break tests!
 
     clusterAttr = {
         "fontname": "Arial",
         "fontsize": "11",
         "color": "red",
-        "style": "dashed"
+        "style": "dashed",
     }
 
     boundaryClusters = {}
@@ -688,18 +764,44 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
     return graph
 
 
-def dataFlowTable(scenes: dict, key: str):
+def dataFlowTable(scenes: dict, key: str, images=False, outputDir=""):
     table = []
     flowCounter = 1
     for f in scenes[key]:
-        table.append(
-            {
-                "Flow ID": flowCounter,
-                "Pitcher": f.pitcher.name,
-                "Catcher": f.catcher.name,
-                "Data Flow": f.wrappedData.flatString(),
-            }
-        )
+        row = {
+            "Flow ID": flowCounter,
+            "Pitcher": f.pitcher.name,
+            "Catcher": f.catcher.name,
+            "Transport Chain": f.wrappedData.getTransportChain(),
+            "Data": f.wrappedData.getNestedData(),
+        }
+
+        if images == True:
+            # print(f.wrappedData.flatDotRecordString())
+            dfGraph = Digraph(
+                filename=f"flow-{_safeFilename(key)}-{flowCounter}",
+                directory=outputDir,
+                graph_attr={
+                    "fontsize": "11",
+                    "fontstyle": "Arial",
+                    "bgcolor": "transparent",
+                },
+                node_attr={
+                    "fontsize": "11",
+                    "fontstyle": "Arial",
+                    "shape": "plaintext",
+                },
+            )
+            dfGraph.node(
+                name="struct",
+                shape="record",
+                label=f.wrappedData.flatDotRecordString(),
+            )
+            dfGraph.render(format="png")
+
+            row["Image Source"] = f"flow-{_safeFilename(key)}-{flowCounter}.png"
+
+        table.append(row)
 
         flowCounter += 1
     return table
@@ -716,6 +818,12 @@ def _mixinResponses(scenes, key):
     scenes[key][:] = newFlows
 
 
+def _safeFilename(filename):
+    return "".join(
+        [c for c in filename if c.isalpha() or c.isdigit() or c == " "]
+    ).rstrip()
+
+
 def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
     if select is None:
         select = scenes.keys()
@@ -726,10 +834,13 @@ def report(scenes: dict, outputDir: str, select=None, dfdLabels=True):
     sceneReports = {}
     for key in select:
         graph = dfd(scenes, key, dfdLabels=dfdLabels)
+
         sceneReports[key] = {
             "graph": graph,
             "dfdImage": renderDfd(graph, key, outputDir=outputDir),
-            "dataFlowTable": dataFlowTable(scenes, key),
+            "dataFlowTable": dataFlowTable(
+                scenes, key, images=True, outputDir=outputDir
+            ),
         }
 
     compoundFlows = []

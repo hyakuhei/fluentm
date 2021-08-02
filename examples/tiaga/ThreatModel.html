@@ -47,94 +47,79 @@
         <img src="Customer views book online-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Customer</td>
-                
-                <td>Web Server</td>
-                
-                <td>Plaintext( View item ID )</td>
-                
+                    <td>1</td>
+                    <td>Customer</td>
+                     
+                    <td>
+                        <img src="flow-Customer views book online-1.png">
+                    </td>
+                    <td>Web Server</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Web Server</td>
-                
-                <td>Content DB</td>
-                
-                <td>Plaintext( Fetch content for ID )</td>
-                
+                    <td>2</td>
+                    <td>Web Server</td>
+                     
+                    <td>
+                        <img src="flow-Customer views book online-2.png">
+                    </td>
+                    <td>Content DB</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Content DB</td>
-                
-                <td>Web Server</td>
-                
-                <td>Plaintext( Image Content, Description )</td>
-                
+                    <td>3</td>
+                    <td>Content DB</td>
+                     
+                    <td>
+                        <img src="flow-Customer views book online-3.png">
+                    </td>
+                    <td>Web Server</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>Web Server</td>
-                
-                <td>Stock DB</td>
-                
-                <td>Plaintext( Get Stock Level )</td>
-                
+                    <td>4</td>
+                    <td>Web Server</td>
+                     
+                    <td>
+                        <img src="flow-Customer views book online-4.png">
+                    </td>
+                    <td>Stock DB</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>5</td>
-                
-                <td>Stock DB</td>
-                
-                <td>Web Server</td>
-                
-                <td>Plaintext( Stock Level )</td>
-                
+                    <td>5</td>
+                    <td>Stock DB</td>
+                     
+                    <td>
+                        <img src="flow-Customer views book online-5.png">
+                    </td>
+                    <td>Web Server</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>6</td>
-                
-                <td>Web Server</td>
-                
-                <td>Customer</td>
-                
-                <td>Plaintext( Rendered Item Information )</td>
-                
+                    <td>6</td>
+                    <td>Web Server</td>
+                     
+                    <td>
+                        <img src="flow-Customer views book online-6.png">
+                    </td>
+                    <td>Customer</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -145,68 +130,57 @@
         <img src="Customer buys book-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Customer</td>
-                
-                <td>Web Server</td>
-                
-                <td>TLS( HTTP( Buy Item ID ) )</td>
-                
+                    <td>1</td>
+                    <td>Customer</td>
+                     
+                    <td>
+                        <img src="flow-Customer buys book-1.png">
+                    </td>
+                    <td>Web Server</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Web Server</td>
-                
-                <td>Merchant API</td>
-                
-                <td>Plaintext( Process payment )</td>
-                
+                    <td>2</td>
+                    <td>Web Server</td>
+                     
+                    <td>
+                        <img src="flow-Customer buys book-2.png">
+                    </td>
+                    <td>Merchant API</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Merchant API</td>
-                
-                <td>Web Server</td>
-                
-                <td>TLS( HTTP( Confirmation ) )</td>
-                
+                    <td>3</td>
+                    <td>Merchant API</td>
+                     
+                    <td>
+                        <img src="flow-Customer buys book-3.png">
+                    </td>
+                    <td>Web Server</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>Web Server</td>
-                
-                <td>Customer</td>
-                
-                <td>TLS( HTTP( SOLD! ) )</td>
-                
+                    <td>4</td>
+                    <td>Web Server</td>
+                     
+                    <td>
+                        <img src="flow-Customer buys book-4.png">
+                    </td>
+                    <td>Customer</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -217,68 +191,57 @@
         <img src="Warehouse packages order-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Order Resolver</td>
-                
-                <td>Label Printer</td>
-                
-                <td>TLS( HTTP( Print label ) )</td>
-                
+                    <td>1</td>
+                    <td>Order Resolver</td>
+                     
+                    <td>
+                        <img src="flow-Warehouse packages order-1.png">
+                    </td>
+                    <td>Label Printer</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Label Printer</td>
-                
-                <td>Order Resolver</td>
-                
-                <td>TLS( HTTP( Label ID ) )</td>
-                
+                    <td>2</td>
+                    <td>Label Printer</td>
+                     
+                    <td>
+                        <img src="flow-Warehouse packages order-2.png">
+                    </td>
+                    <td>Order Resolver</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Order Resolver</td>
-                
-                <td>Warehouse Notifier</td>
-                
-                <td>TLS( HTTP( Pick stock item and use label ) )</td>
-                
+                    <td>3</td>
+                    <td>Order Resolver</td>
+                     
+                    <td>
+                        <img src="flow-Warehouse packages order-3.png">
+                    </td>
+                    <td>Warehouse Notifier</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>Warehouse Notifier</td>
-                
-                <td>Order Resolver</td>
-                
-                <td>TLS( HTTP( Confirmation ID ) )</td>
-                
+                    <td>4</td>
+                    <td>Warehouse Notifier</td>
+                     
+                    <td>
+                        <img src="flow-Warehouse packages order-4.png">
+                    </td>
+                    <td>Order Resolver</td>
+                    
                 </tr>
-                
             
         </table>
 

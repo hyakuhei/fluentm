@@ -1,0 +1,7 @@
+digraph {
+	graph [bgcolor=transparent fontsize=11 fontstyle=Arial]
+	node [fontsize=11 fontstyle=Arial shape=plaintext]
+	struct [label="TLS|{Update VPC configuration,
+STS token,
+Operates as Role ARN}" shape=record]
+}

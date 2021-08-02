@@ -47,55 +47,46 @@
         <img src="kubectl gets pre-signed URL-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>kubectl</td>
-                
-                <td>aws-cli</td>
-                
-                <td>Exec( Exec aws-cli get-token )</td>
-                
+                    <td>1</td>
+                    <td>kubectl</td>
+                     
+                    <td>
+                        <img src="flow-kubectl gets presigned URL-1.png">
+                    </td>
+                    <td>aws-cli</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>aws-cli</td>
-                
-                <td>aws-cli</td>
-                
-                <td>Internal( Sign URL using AWS IAM credentials )</td>
-                
+                    <td>2</td>
+                    <td>aws-cli</td>
+                     
+                    <td>
+                        <img src="flow-kubectl gets presigned URL-2.png">
+                    </td>
+                    <td>aws-cli</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>aws-cli</td>
-                
-                <td>kubectl</td>
-                
-                <td>Stdout( STS pre-signed URL )</td>
-                
+                    <td>3</td>
+                    <td>aws-cli</td>
+                     
+                    <td>
+                        <img src="flow-kubectl gets presigned URL-3.png">
+                    </td>
+                    <td>kubectl</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -106,94 +97,79 @@
         <img src="API traffic-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>kubectl</td>
-                
-                <td>Kubernetes API</td>
-                
-                <td>TLS( HTTP( pre-signed URL as Bearer Token HTTP Header ) )</td>
-                
+                    <td>1</td>
+                    <td>kubectl</td>
+                     
+                    <td>
+                        <img src="flow-API traffic-1.png">
+                    </td>
+                    <td>Kubernetes API</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Kubernetes API</td>
-                
-                <td>aws-iam-authenticator</td>
-                
-                <td>TLS( HTTP( TokenReview request with pre-signed URL ) )</td>
-                
+                    <td>2</td>
+                    <td>Kubernetes API</td>
+                     
+                    <td>
+                        <img src="flow-API traffic-2.png">
+                    </td>
+                    <td>aws-iam-authenticator</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>aws-iam-authenticator</td>
-                
-                <td>AWS STS</td>
-                
-                <td>TLS( HTTP( SIGV4( sts:GetCallerIdentity request ) ) )</td>
-                
+                    <td>3</td>
+                    <td>aws-iam-authenticator</td>
+                     
+                    <td>
+                        <img src="flow-API traffic-3.png">
+                    </td>
+                    <td>AWS STS</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>AWS STS</td>
-                
-                <td>aws-iam-authenticator</td>
-                
-                <td>TLS( HTTP( sts:GetCallerIdentity response ) )</td>
-                
+                    <td>4</td>
+                    <td>AWS STS</td>
+                     
+                    <td>
+                        <img src="flow-API traffic-4.png">
+                    </td>
+                    <td>aws-iam-authenticator</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>5</td>
-                
-                <td>aws-iam-authenticator</td>
-                
-                <td>Kubernetes API</td>
-                
-                <td>TLS( HTTP( TokenReview response with username ) )</td>
-                
+                    <td>5</td>
+                    <td>aws-iam-authenticator</td>
+                     
+                    <td>
+                        <img src="flow-API traffic-5.png">
+                    </td>
+                    <td>Kubernetes API</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>6</td>
-                
-                <td>aws-iam-authenticator</td>
-                
-                <td>Kubernetes API</td>
-                
-                <td>TLS( HTTP( Async Watch mapped aws-auth ConfigMap  ) )</td>
-                
+                    <td>6</td>
+                    <td>aws-iam-authenticator</td>
+                     
+                    <td>
+                        <img src="flow-API traffic-6.png">
+                    </td>
+                    <td>Kubernetes API</td>
+                    
                 </tr>
-                
             
         </table>
 

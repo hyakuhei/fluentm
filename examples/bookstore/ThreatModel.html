@@ -47,68 +47,57 @@
         <img src="Customer Login-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Customer</td>
-                
-                <td>Nginx</td>
-                
-                <td>TLS( HTTP( GET /Login credentials ) )</td>
-                
+                    <td>1</td>
+                    <td>Customer</td>
+                     
+                    <td>
+                        <img src="flow-Customer Login-1.png">
+                    </td>
+                    <td>Nginx</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Nginx</td>
-                
-                <td>User Database</td>
-                
-                <td>SQL( SELECT user password )</td>
-                
+                    <td>2</td>
+                    <td>Nginx</td>
+                     
+                    <td>
+                        <img src="flow-Customer Login-2.png">
+                    </td>
+                    <td>User Database</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>User Database</td>
-                
-                <td>Nginx</td>
-                
-                <td>SQL( password )</td>
-                
+                    <td>3</td>
+                    <td>User Database</td>
+                     
+                    <td>
+                        <img src="flow-Customer Login-3.png">
+                    </td>
+                    <td>Nginx</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>Nginx</td>
-                
-                <td>Customer</td>
-                
-                <td>TLS( HTTP( Login Cookie ) )</td>
-                
+                    <td>4</td>
+                    <td>Nginx</td>
+                     
+                    <td>
+                        <img src="flow-Customer Login-4.png">
+                    </td>
+                    <td>Customer</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -119,68 +108,57 @@
         <img src="Customer Lists Books-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Customer</td>
-                
-                <td>Nginx</td>
-                
-                <td>TLS( HTTP( GET /list, Login Cookie ) )</td>
-                
+                    <td>1</td>
+                    <td>Customer</td>
+                     
+                    <td>
+                        <img src="flow-Customer Lists Books-1.png">
+                    </td>
+                    <td>Nginx</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Nginx</td>
-                
-                <td>Stock Database</td>
-                
-                <td>SQL( SELECT stock )</td>
-                
+                    <td>2</td>
+                    <td>Nginx</td>
+                     
+                    <td>
+                        <img src="flow-Customer Lists Books-2.png">
+                    </td>
+                    <td>Stock Database</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Stock Database</td>
-                
-                <td>Nginx</td>
-                
-                <td>SQL( Stock Items, Pagination token )</td>
-                
+                    <td>3</td>
+                    <td>Stock Database</td>
+                     
+                    <td>
+                        <img src="flow-Customer Lists Books-3.png">
+                    </td>
+                    <td>Nginx</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>Nginx</td>
-                
-                <td>Customer</td>
-                
-                <td>TLS( HTTP( Page listings ) )</td>
-                
+                    <td>4</td>
+                    <td>Nginx</td>
+                     
+                    <td>
+                        <img src="flow-Customer Lists Books-4.png">
+                    </td>
+                    <td>Customer</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -191,94 +169,79 @@
         <img src="Customer Views Details-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Customer</td>
-                
-                <td>Nginx</td>
-                
-                <td>TLS( HTTP( GET /item, Login Cookie ) )</td>
-                
+                    <td>1</td>
+                    <td>Customer</td>
+                     
+                    <td>
+                        <img src="flow-Customer Views Details-1.png">
+                    </td>
+                    <td>Nginx</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Nginx</td>
-                
-                <td>User Database</td>
-                
-                <td>HTTP( Log viewed ID )</td>
-                
+                    <td>2</td>
+                    <td>Nginx</td>
+                     
+                    <td>
+                        <img src="flow-Customer Views Details-2.png">
+                    </td>
+                    <td>User Database</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Nginx</td>
-                
-                <td>Stock Database</td>
-                
-                <td>SQL( SELECT ID )</td>
-                
+                    <td>3</td>
+                    <td>Nginx</td>
+                     
+                    <td>
+                        <img src="flow-Customer Views Details-3.png">
+                    </td>
+                    <td>Stock Database</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>Stock Database</td>
-                
-                <td>Nginx</td>
-                
-                <td>SQL( Stock details, CDN image links )</td>
-                
+                    <td>4</td>
+                    <td>Stock Database</td>
+                     
+                    <td>
+                        <img src="flow-Customer Views Details-4.png">
+                    </td>
+                    <td>Nginx</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>5</td>
-                
-                <td>Nginx</td>
-                
-                <td>Customer</td>
-                
-                <td>HTTP( Page html )</td>
-                
+                    <td>5</td>
+                    <td>Nginx</td>
+                     
+                    <td>
+                        <img src="flow-Customer Views Details-5.png">
+                    </td>
+                    <td>Customer</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>6</td>
-                
-                <td>Customer</td>
-                
-                <td>CDN</td>
-                
-                <td>HTTP( GET images )</td>
-                
+                    <td>6</td>
+                    <td>Customer</td>
+                     
+                    <td>
+                        <img src="flow-Customer Views Details-6.png">
+                    </td>
+                    <td>CDN</td>
+                    
                 </tr>
-                
             
         </table>
 

@@ -47,56 +47,46 @@
         <img src="Create an IAM OIDC provider for cluster-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>User</td>
-                
-                <td>EKS</td>
-                
-                <td>TLS( SIGV4( Create OIDC endpoint ) )</td>
-                
+                    <td>1</td>
+                    <td>User</td>
+                     
+                    <td>
+                        <img src="flow-Create an IAM OIDC provider for cluster-1.png">
+                    </td>
+                    <td>EKS</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>EKS</td>
-                
-                <td>User</td>
-                
-                <td>Plaintext( OIDC provider URL )</td>
-                
+                    <td>2</td>
+                    <td>EKS</td>
+                     
+                    <td>
+                        <img src="flow-Create an IAM OIDC provider for cluster-2.png">
+                    </td>
+                    <td>User</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>User</td>
-                
-                <td>IAM</td>
-                
-                <td>TLS( SIGV4( Add OIDC provider,
- OIDC provider URL ) )</td>
-                
+                    <td>3</td>
+                    <td>User</td>
+                     
+                    <td>
+                        <img src="flow-Create an IAM OIDC provider for cluster-3.png">
+                    </td>
+                    <td>IAM</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -107,71 +97,57 @@
         <img src="Create an IAM policy & role to allow CPI addon to manage VPC-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>User</td>
-                
-                <td>IAM</td>
-                
-                <td>TLS( SIGV4( Create Policy ) )</td>
-                
+                    <td>1</td>
+                    <td>User</td>
+                     
+                    <td>
+                        <img src="flow-Create an IAM policy  role to allow CPI addon to manage VPC-1.png">
+                    </td>
+                    <td>IAM</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>IAM</td>
-                
-                <td>User</td>
-                
-                <td>TLS( Policy ARN )</td>
-                
+                    <td>2</td>
+                    <td>IAM</td>
+                     
+                    <td>
+                        <img src="flow-Create an IAM policy  role to allow CPI addon to manage VPC-2.png">
+                    </td>
+                    <td>User</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>User</td>
-                
-                <td>IAM</td>
-                
-                <td>TLS( SIGV4( Create Role,
-Trusted Entity: Web Identity,
-Identity Provider: OIDC URL,
-Attach Policy: Policy ARN ) )</td>
-                
+                    <td>3</td>
+                    <td>User</td>
+                     
+                    <td>
+                        <img src="flow-Create an IAM policy  role to allow CPI addon to manage VPC-3.png">
+                    </td>
+                    <td>IAM</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>IAM</td>
-                
-                <td>User</td>
-                
-                <td>TLS( Role ARN )</td>
-                
+                    <td>4</td>
+                    <td>IAM</td>
+                     
+                    <td>
+                        <img src="flow-Create an IAM policy  role to allow CPI addon to manage VPC-4.png">
+                    </td>
+                    <td>User</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -182,29 +158,24 @@ Attach Policy: Policy ARN ) )</td>
         <img src="Associate IAM role to a cluster service account-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>User</td>
-                
-                <td>Kube API</td>
-                
-                <td>TLS( SIGV4( Annotate service account $acct with Role ARN ) )</td>
-                
+                    <td>1</td>
+                    <td>User</td>
+                     
+                    <td>
+                        <img src="flow-Associate IAM role to a cluster service account-1.png">
+                    </td>
+                    <td>Kube API</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -215,101 +186,79 @@ Attach Policy: Policy ARN ) )</td>
         <img src="Deploy Addon-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>User</td>
-                
-                <td>EKS</td>
-                
-                <td>TLS( SIGV4( Create add-on CNI,
-Cluster: $clusterID ) )</td>
-                
+                    <td>1</td>
+                    <td>User</td>
+                     
+                    <td>
+                        <img src="flow-Deploy Addon-1.png">
+                    </td>
+                    <td>EKS</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>EKS</td>
-                
-                <td>Kube API</td>
-                
-                <td>TLS( Deployment Spec:  CNI addon
-Role: Role ARN )</td>
-                
+                    <td>2</td>
+                    <td>EKS</td>
+                     
+                    <td>
+                        <img src="flow-Deploy Addon-2.png">
+                    </td>
+                    <td>Kube API</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Kube API</td>
-                
-                <td>eks-pod-identity-webhook</td>
-                
-                <td>TLS( Pod Spec )</td>
-                
+                    <td>3</td>
+                    <td>Kube API</td>
+                     
+                    <td>
+                        <img src="flow-Deploy Addon-3.png">
+                    </td>
+                    <td>eks-pod-identity-webhook</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>eks-pod-identity-webhook</td>
-                
-                <td>Kube API</td>
-                
-                <td>TLS( Mutated Pod Spec,
-Add projected token to spec )</td>
-                
+                    <td>4</td>
+                    <td>eks-pod-identity-webhook</td>
+                     
+                    <td>
+                        <img src="flow-Deploy Addon-4.png">
+                    </td>
+                    <td>Kube API</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>5</td>
-                
-                <td>Kube API</td>
-                
-                <td>Kubelet</td>
-                
-                <td>TLS( Launch Pod,
-Pod Spec )</td>
-                
+                    <td>5</td>
+                    <td>Kube API</td>
+                     
+                    <td>
+                        <img src="flow-Deploy Addon-5.png">
+                    </td>
+                    <td>Kubelet</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>6</td>
-                
-                <td>Kubelet</td>
-                
-                <td>CNI Pod</td>
-                
-                <td>TLS( Launch Pod,
-svcacct $acct,
-Role ARN,
-JWT STS Token )</td>
-                
+                    <td>6</td>
+                    <td>Kubelet</td>
+                     
+                    <td>
+                        <img src="flow-Deploy Addon-6.png">
+                    </td>
+                    <td>CNI Pod</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -320,31 +269,24 @@ JWT STS Token )</td>
         <img src="CNI configures VPC-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>CNI Pod</td>
-                
-                <td>VPC</td>
-                
-                <td>TLS( Update VPC configuration,
-STS token,
-Operates as Role ARN )</td>
-                
+                    <td>1</td>
+                    <td>CNI Pod</td>
+                     
+                    <td>
+                        <img src="flow-CNI configures VPC-1.png">
+                    </td>
+                    <td>VPC</td>
+                    
                 </tr>
-                
             
         </table>
 

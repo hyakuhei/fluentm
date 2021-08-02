@@ -47,107 +47,90 @@
         <img src="Developer requests a new cluster-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Developer</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>TLS( HTTP( Create cluster request ) )</td>
-                
+                    <td>1</td>
+                    <td>Developer</td>
+                     
+                    <td>
+                        <img src="flow-Developer requests a new cluster-1.png">
+                    </td>
+                    <td>Cluster Orchestrator</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>Internal( Validates user )</td>
-                
+                    <td>2</td>
+                    <td>Cluster Orchestrator</td>
+                     
+                    <td>
+                        <img src="flow-Developer requests a new cluster-2.png">
+                    </td>
+                    <td>Cluster Orchestrator</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>IAM</td>
-                
-                <td>TLS( HTTP( Create new account ) )</td>
-                
+                    <td>3</td>
+                    <td>Cluster Orchestrator</td>
+                     
+                    <td>
+                        <img src="flow-Developer requests a new cluster-3.png">
+                    </td>
+                    <td>IAM</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>IAM</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>TLS( HTTP( Account Details ) )</td>
-                
+                    <td>4</td>
+                    <td>IAM</td>
+                     
+                    <td>
+                        <img src="flow-Developer requests a new cluster-4.png">
+                    </td>
+                    <td>Cluster Orchestrator</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>5</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>EKS</td>
-                
-                <td>TLS( HTTP( Create new cluster ) )</td>
-                
+                    <td>5</td>
+                    <td>Cluster Orchestrator</td>
+                     
+                    <td>
+                        <img src="flow-Developer requests a new cluster-5.png">
+                    </td>
+                    <td>EKS</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>6</td>
-                
-                <td>EKS</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>TLS( HTTP( Cluster Details ) )</td>
-                
+                    <td>6</td>
+                    <td>EKS</td>
+                     
+                    <td>
+                        <img src="flow-Developer requests a new cluster-6.png">
+                    </td>
+                    <td>Cluster Orchestrator</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>7</td>
-                
-                <td>Cluster Orchestrator</td>
-                
-                <td>k8s API</td>
-                
-                <td>TLS( HTTP( Add default admission controller ) )</td>
-                
+                    <td>7</td>
+                    <td>Cluster Orchestrator</td>
+                     
+                    <td>
+                        <img src="flow-Developer requests a new cluster-7.png">
+                    </td>
+                    <td>k8s API</td>
+                    
                 </tr>
-                
             
         </table>
 
@@ -158,107 +141,90 @@
         <img src="Developer creates a pod-dfd.png">
         <table id="dataFlowTable">
             <tr>
-            
                 <th>Flow ID</th>
-            
+                
                 <th>Pitcher</th>
-            
+                <th>Data Construction</th>
                 <th>Catcher</th>
-            
-                <th>Data Flow</th>
-            
+                
             </tr>
             
                 <tr>
-                
-                <td>1</td>
-                
-                <td>Developer</td>
-                
-                <td>k8s API</td>
-                
-                <td>TLS( HTTP( Create POD ) )</td>
-                
+                    <td>1</td>
+                    <td>Developer</td>
+                     
+                    <td>
+                        <img src="flow-Developer creates a pod-1.png">
+                    </td>
+                    <td>k8s API</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>2</td>
-                
-                <td>k8s API</td>
-                
-                <td>Admission Controller</td>
-                
-                <td>TLS( HTTP( Validate pod creation ) )</td>
-                
+                    <td>2</td>
+                    <td>k8s API</td>
+                     
+                    <td>
+                        <img src="flow-Developer creates a pod-2.png">
+                    </td>
+                    <td>Admission Controller</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>3</td>
-                
-                <td>Admission Controller</td>
-                
-                <td>OPA</td>
-                
-                <td>HTTP( Validate pod creation.. )</td>
-                
+                    <td>3</td>
+                    <td>Admission Controller</td>
+                     
+                    <td>
+                        <img src="flow-Developer creates a pod-3.png">
+                    </td>
+                    <td>OPA</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>4</td>
-                
-                <td>OPA</td>
-                
-                <td>Policy Repo</td>
-                
-                <td>SSH( GIT( Get latest policy ) )</td>
-                
+                    <td>4</td>
+                    <td>OPA</td>
+                     
+                    <td>
+                        <img src="flow-Developer creates a pod-4.png">
+                    </td>
+                    <td>Policy Repo</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>5</td>
-                
-                <td>Policy Repo</td>
-                
-                <td>OPA</td>
-                
-                <td>SSH( GIT( Latest policy REGO ) )</td>
-                
+                    <td>5</td>
+                    <td>Policy Repo</td>
+                     
+                    <td>
+                        <img src="flow-Developer creates a pod-5.png">
+                    </td>
+                    <td>OPA</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>6</td>
-                
-                <td>OPA</td>
-                
-                <td>k8s API</td>
-                
-                <td>TLS( HTTP( Validation Decision ) )</td>
-                
+                    <td>6</td>
+                    <td>OPA</td>
+                     
+                    <td>
+                        <img src="flow-Developer creates a pod-6.png">
+                    </td>
+                    <td>k8s API</td>
+                    
                 </tr>
-                
             
                 <tr>
-                
-                <td>7</td>
-                
-                <td>k8s API</td>
-                
-                <td>Developer</td>
-                
-                <td>TLS( HTTP( Approve/Denied ) )</td>
-                
+                    <td>7</td>
+                    <td>k8s API</td>
+                     
+                    <td>
+                        <img src="flow-Developer creates a pod-7.png">
+                    </td>
+                    <td>Developer</td>
+                    
                 </tr>
-                
             
         </table>
 

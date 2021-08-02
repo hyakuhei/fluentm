@@ -1,0 +1,6 @@
+digraph {
+	graph [bgcolor=transparent fontsize=11 fontstyle=Arial]
+	node [fontsize=11 fontstyle=Arial shape=plaintext]
+	struct [label="TLS|SIGV4|{Add OIDC provider,
+ OIDC provider URL}" shape=record]
+}

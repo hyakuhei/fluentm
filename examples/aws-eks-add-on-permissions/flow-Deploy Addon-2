@@ -1,0 +1,6 @@
+digraph {
+	graph [bgcolor=transparent fontsize=11 fontstyle=Arial]
+	node [fontsize=11 fontstyle=Arial shape=plaintext]
+	struct [label="TLS|{Deployment Spec:  CNI addon
+Role: Role ARN}" shape=record]
+}

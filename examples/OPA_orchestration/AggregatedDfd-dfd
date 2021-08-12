@@ -3,6 +3,7 @@ digraph all {
 	node [fontname=Arial fontsize=11 shape=box style=rounded]
 	edge [fontname=Arial fontsize=11]
 	Developer
+	OPA
 	subgraph "cluster_Control Cluster" {
 		graph [color=red fontname=Arial fontsize=11 label="Control Cluster" style=dashed]
 		"Cluster Orchestrator"
@@ -22,7 +23,6 @@ digraph all {
 	subgraph "cluster_Cluster Orchestrator" {
 		graph [color=red fontname=Arial fontsize=11 label="Cluster Orchestrator" style=dashed]
 		"Admission Controller"
-		OPA
 	}
 	subgraph "cluster_Version Control" {
 		graph [color=red fontname=Arial fontsize=11 label="Version Control" style=dashed]

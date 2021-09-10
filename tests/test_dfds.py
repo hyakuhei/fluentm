@@ -1,4 +1,4 @@
-from fluentm.entities import  Process, DataFlow
+from fluentm.entities import Process, DataFlow
 from fluentm.renderer import dfd, renderDfd
 
 scenes = {

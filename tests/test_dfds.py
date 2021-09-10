@@ -1,5 +1,5 @@
-from fluentm import Actor, Boundary, Process, Data, DataFlow
-from fluentm import dfd, renderDfd
+from fluentm.entities import  Process, DataFlow
+from fluentm.renderer import dfd, renderDfd
 
 scenes = {
     "Test ABC": [

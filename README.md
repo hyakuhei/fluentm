@@ -26,8 +26,8 @@ The idea is that you can use simplified python, and not even need to understand 
 like variables, or control structures, but still create a useful diagram.
 
 ```python
-from fluentm import Actor, Boundary, Process, DataFlow
-from fluentm import report
+from fluentm.entities import Actor, Boundary, Process, DataFlow
+from fluentm.renderer import report
 
 scenes={
         "FluenTM":[

@@ -1,0 +1,94 @@
+<html>
+    <head>
+    <title>
+        {{ title }}
+    </title>
+    <style>
+        #dataFlowTable {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        #dataFlowTable td, #dataFlowTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        }
+
+        #dataFlowTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #dataFlowTable tr:hover {background-color: #ddd;}
+
+        #dataFlowTable th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #a34a4a;
+        color: white;
+        }
+        h2 {
+            color: rgb(48, 27, 23);
+            font-family: verdana;
+            font-size: 25px;
+        }
+        p {
+        font-family: verdana;
+        font-size: 15px;
+    }
+    </style>
+</head>
+    <body>
+        <h2> Aggregated Model</h2>
+        <p>This high level diagram gathers all flows in this model to show how components interact at a high level.</p>
+        <img src={{ aggregatedDfd['dfdImage'] }} >
+        <hr />
+        {% for report in sceneReports.keys() %}
+        <h2> {{report}} </h2>
+        <img src="{{ sceneReports[report]['dfdImage'] }}">
+        <table id="dataFlowTable">
+            <tr>
+                <th>Flow ID</th>
+                {% if "Image Source" in sceneReports[report]['dataFlowTable'][0] %}
+                <th>Pitcher</th>
+                <th>Data Construction</th>
+                <th>Catcher</th>
+                {% else %}
+                <th>Pitcher</th>
+                <th>Catcher</th>
+                <th>Transport</th>
+                <th>Data</th>
+                {% endif %}
+            </tr>
+            {% for row in sceneReports[report]['dataFlowTable'] %}
+                <tr>
+                    <td>{{row["Flow ID"]}}</td>
+                    <td>{{row["Pitcher"]}}</td>
+                    {% if "Image Source" in row %} 
+                    <td>
+                        <img src="{{row['Image Source']}}">
+                    </td>
+                    <td>{{row["Catcher"]}}</td>
+                    {% else %}
+                    <td>{{row["Catcher"]}}</td>
+                    <td>
+                        {% for item in row["Transport Chain"] %}
+                            {% for i in range(loop.index) %}
+                                <strong>-</strong>
+                            {% endfor%}
+                            <strong>{{ item.__class__.__name__ }}</strong><br/>
+                        {% endfor %}
+                    </td>
+                    
+                    <td>
+                        {{ row["Data"] }}
+                    </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+
+  
+        <hr />
+        {% endfor %}
+    </body>
+</html>

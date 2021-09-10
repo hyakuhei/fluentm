@@ -1,5 +1,5 @@
-from fluentm import Boundary, Process, DataFlow
-from fluentm import dfd, renderDfd
+from fluentm.entities import Boundary, Process, DataFlow
+from fluentm.renderer import dfd, renderDfd
 
 # Example using completely new objects created only here, inline
 scenes = {

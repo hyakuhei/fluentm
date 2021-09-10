@@ -64,7 +64,16 @@ FluenTM is incomplete; there's whole big chunks of functionality missing:
 * [Theragile](https://threagile.io) is the open-source toolkit which allows to model an architecture with its assets in an agile declarative fashion as a YAML file
 * [Diagrams](https://github.com/mingrammer/diagrams) generates beautifully balanced architecture digrams
 
-## Installation
+## Usage
+FluenTM is available as a python package in PyPI: https://pypi.org/project/fluentm/
+
+First, make sure your system has graphviz installed, FluentM depends on graphviz to draw diagrams. Next use you favorite python package manager to install FluenTM, use of a virtual environment is recommended:
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install fluentm
+```
+
+## Developing
 ```bash
 # Install graphviz using apt/brew/yum etc.
 echo "Replace this echo command with your installation of graphviz"
@@ -81,12 +90,13 @@ python3 -m venv .venv
 # Load the virtualenv
 source .venv/bin/activate
 
-# Install the requirements
+# Install requirements like pytest that don't ship with the package
 pip install -r requirements.txt
 
-# Generate an example
-python3 example_bookstore.py
+# Install the fluentm package locally
+pip install -e .
 
-# Open the example
-open examples/bookstore/ThreatModel.html
+# Test by generating one of the included examples
+cd examples
+python3 example_bookstore.py && open bookstore/ThreatModel.html
 ```

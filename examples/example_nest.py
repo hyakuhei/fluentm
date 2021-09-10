@@ -1,0 +1,40 @@
+from fluentm.entities import Actor, Boundary, Process, Data, DataFlow, HTTP, TLS, SQL, Internal
+from fluentm.renderer import report
+
+
+scenes = {
+    # Example using variables, which is fine for small things but gets hard with longer flows
+    "Towers": [
+        DataFlow(
+            Process("Alice").inBoundary(
+                Boundary("A Inner").inBoundary(
+                    Boundary("A Mid").inBoundary(Boundary("A Outer"))
+                )
+            ),
+            Process("Bob").inBoundary(
+                Boundary("B Inner").inBoundary(
+                    Boundary("B Mid").inBoundary(Boundary("B Outer"))
+                )
+            ),
+            TLS("Helo"),
+            response=TLS("Hai"),
+        )
+    ],
+    "Enter Charlie": [
+        DataFlow(
+            Process("Charlie").inBoundary(Boundary("B Outer")),
+            Process("Alice"),
+            TLS("Yo"),
+        )
+    ],
+    "Enter Geoff": [
+        DataFlow(
+            Process("Geoff").inBoundary(Boundary("B Inner")),
+            Process("Bob"),
+            Internal("Oh hai"),
+        )
+    ],
+}
+
+if __name__ == "__main__":
+    report(scenes, outputDir="nest")

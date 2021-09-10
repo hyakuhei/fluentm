@@ -1,5 +1,5 @@
-from fluentm.renderer import Actor, Boundary, Process, DataFlow
-from fluentm.entities import dfd, renderDfd
+from fluentm.entities import Actor, Boundary, Process, DataFlow
+from fluentm.renderer import dfd, renderDfd
 
 # fluentTM Classes are scoped by name, so, I can only have one Boundary called "Internet"
 # Attempting to instantiate another with the same name will give you the first one you instantiated

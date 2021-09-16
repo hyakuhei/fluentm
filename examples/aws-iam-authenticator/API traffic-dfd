@@ -8,12 +8,35 @@ digraph "API traffic" {
 	}
 	subgraph "cluster_AWS Cloud" {
 		graph [color=red fontname=Arial fontsize=11 label="AWS Cloud" style=dashed]
-		"AWS STS"
+		subgraph "cluster_EKS Cluster" {
+			graph [color=red fontname=Arial fontsize=11 label="EKS Cluster" style=dashed]
+			"Kubernetes API"
+		}
+	}
+	subgraph "cluster_AWS Cloud" {
+		graph [color=red fontname=Arial fontsize=11 label="AWS Cloud" style=dashed]
+		subgraph "cluster_EKS Cluster" {
+			graph [color=red fontname=Arial fontsize=11 label="EKS Cluster" style=dashed]
+			"Kubernetes API"
+		}
 		subgraph "cluster_EKS Cluster" {
 			graph [color=red fontname=Arial fontsize=11 label="EKS Cluster" style=dashed]
 			"Kubernetes API"
 			"aws-iam-authenticator"
 		}
+	}
+	subgraph "cluster_AWS Cloud" {
+		graph [color=red fontname=Arial fontsize=11 label="AWS Cloud" style=dashed]
+		subgraph "cluster_EKS Cluster" {
+			graph [color=red fontname=Arial fontsize=11 label="EKS Cluster" style=dashed]
+			"Kubernetes API"
+		}
+		subgraph "cluster_EKS Cluster" {
+			graph [color=red fontname=Arial fontsize=11 label="EKS Cluster" style=dashed]
+			"Kubernetes API"
+			"aws-iam-authenticator"
+		}
+		"AWS STS"
 	}
 	kubectl -> "Kubernetes API" [label="(1) pre-signed URL as Bearer Token HTTP Header"]
 	"Kubernetes API" -> "aws-iam-authenticator" [label="(2) TokenReview request with pre-signed URL"]

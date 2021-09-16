@@ -13,6 +13,14 @@ digraph "Customer buys book" {
 			"Web Server"
 		}
 	}
+	subgraph cluster_Internet {
+		graph [color=red fontname=Arial fontsize=11 label=Internet style=dashed]
+		Customer
+		subgraph cluster_Visa {
+			graph [color=red fontname=Arial fontsize=11 label=Visa style=dashed]
+			"Merchant API"
+		}
+	}
 	Customer -> "Web Server" [label="(1) Buy Item ID"]
 	"Web Server" -> "Merchant API" [label="(2) Process payment"]
 	"Merchant API" -> "Web Server" [label="(3) Confirmation"]

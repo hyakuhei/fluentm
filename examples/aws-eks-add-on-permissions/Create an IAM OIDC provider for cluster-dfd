@@ -6,6 +6,10 @@ digraph "Create an IAM OIDC provider for cluster" {
 	subgraph "cluster_AWS SVCs" {
 		graph [color=red fontname=Arial fontsize=11 label="AWS SVCs" style=dashed]
 		EKS
+	}
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=11 label="AWS SVCs" style=dashed]
+		EKS
 		IAM
 	}
 	User -> EKS [label="(1) Create OIDC endpoint"]

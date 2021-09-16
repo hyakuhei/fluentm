@@ -9,6 +9,10 @@ digraph "Warehouse packages order" {
 	subgraph cluster_Warehouse {
 		graph [color=red fontname=Arial fontsize=11 label=Warehouse style=dashed]
 		"Label Printer"
+	}
+	subgraph cluster_Warehouse {
+		graph [color=red fontname=Arial fontsize=11 label=Warehouse style=dashed]
+		"Label Printer"
 		"Warehouse Notifier"
 	}
 	"Order Resolver" -> "Label Printer" [label="(1) Print label"]

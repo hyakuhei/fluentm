@@ -3,12 +3,12 @@ digraph all {
 	node [fontname=Arial fontsize=11 shape=box style=rounded]
 	edge [fontname=Arial fontsize=11]
 	Security
-	Developer
-	"Review Meeting"
 	subgraph "cluster_Version Control" {
 		graph [color=red fontname=Arial fontsize=11 label="Version Control" style=dashed]
 		ThreatModel
 	}
+	Developer
+	"Review Meeting"
 	Security -> ThreatModel [dir=forward]
 	Developer -> ThreatModel [dir=forward]
 	ThreatModel -> "Review Meeting" [dir=both]

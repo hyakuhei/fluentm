@@ -3,12 +3,12 @@ digraph FluenTM {
 	node [fontname=Arial fontsize=11 shape=box style=rounded]
 	edge [fontname=Arial fontsize=11]
 	Security
-	Developer
-	"Review Meeting"
 	subgraph "cluster_Version Control" {
 		graph [color=red fontname=Arial fontsize=11 label="Version Control" style=dashed]
 		ThreatModel
 	}
+	Developer
+	"Review Meeting"
 	Security -> ThreatModel [label="(1)"]
 	Developer -> ThreatModel [label="(2)"]
 	Security -> ThreatModel [label="(3)"]

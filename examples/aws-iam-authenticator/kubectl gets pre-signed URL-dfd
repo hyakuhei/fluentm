@@ -5,6 +5,10 @@ digraph "kubectl gets pre-signed URL" {
 	subgraph "cluster_User Machine" {
 		graph [color=red fontname=Arial fontsize=11 label="User Machine" style=dashed]
 		kubectl
+	}
+	subgraph "cluster_User Machine" {
+		graph [color=red fontname=Arial fontsize=11 label="User Machine" style=dashed]
+		kubectl
 		"aws-cli"
 	}
 	kubectl -> "aws-cli" [label="(1) Exec aws-cli get-token"]

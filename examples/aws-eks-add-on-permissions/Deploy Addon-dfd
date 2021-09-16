@@ -12,11 +12,33 @@ digraph "Deploy Addon" {
 		subgraph "cluster_Kubernetes Control Plane" {
 			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Control Plane" style=dashed]
 			"Kube API"
+		}
+	}
+	subgraph "cluster_Single Tenant VPC" {
+		graph [color=red fontname=Arial fontsize=11 label="Single Tenant VPC" style=dashed]
+		subgraph "cluster_Kubernetes Control Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Control Plane" style=dashed]
+			"Kube API"
+		}
+		subgraph "cluster_Kubernetes Control Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Control Plane" style=dashed]
+			"Kube API"
 			"eks-pod-identity-webhook"
 		}
 	}
 	subgraph "cluster_Customer Account" {
 		graph [color=red fontname=Arial fontsize=11 label="Customer Account" style=dashed]
+		subgraph "cluster_Kubernetes Data Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
+			Kubelet
+		}
+	}
+	subgraph "cluster_Customer Account" {
+		graph [color=red fontname=Arial fontsize=11 label="Customer Account" style=dashed]
+		subgraph "cluster_Kubernetes Data Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
+			Kubelet
+		}
 		subgraph "cluster_Kubernetes Data Plane" {
 			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
 			Kubelet

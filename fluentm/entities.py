@@ -10,12 +10,14 @@ from jinja2 import FileSystemLoader, Environment
 
 SPACES = "   "
 
+
 class Unset(object):
     pass
 
 
 class Unset(object):
     pass
+
 
 class WrappableProtocol(object):
     def __init__(
@@ -439,6 +441,7 @@ class Asset(object):
 
     def __init__(self, name):
         self.name = name
+        self.children = []
 
         if self.__class__.__name__ in Asset._instances:  # e.g Boundary
             if (
@@ -456,11 +459,29 @@ class Asset(object):
     def inBoundary(self, boundary: Union[Boundary, str]):
         if isinstance(boundary, Boundary):
             self.boundary = boundary
+            self.boundary.children.append(self)
         elif isinstance(boundary, str):
             self.boundary = Boundary(boundary)
+            self.boundary.children.append(self)
         else:
             assert False, "Bad type to inBoundary"
-        return self
+
+        return self  # Fluent style
+
+    def getBoundaries(self, l: Union[list[Boundary], None] = None):
+        if l is None:
+            l = []
+
+        if not hasattr(self, "boundary"):
+            return l
+        else:
+            l.append(self.boundary)
+            if hasattr(self.boundary, "boundary"):
+                return self.boundary.getBoundaries(
+                    l
+                )  # Recurse up through the boundaries
+            else:
+                return l
 
     def addCredential(self, credential):
         assert isinstance(credential, Credential)
@@ -666,4 +687,3 @@ class DataFlow(object):
 
     def __repr__(self):
         return f"{self.__class__.__name__}:{self.name}"
-

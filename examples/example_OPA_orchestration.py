@@ -1,4 +1,14 @@
-from fluentm.entities import Actor, Boundary, Process, DataFlow, TLS, HTTP, Internal, GIT, SSH
+from fluentm.entities import (
+    Actor,
+    Boundary,
+    Process,
+    DataFlow,
+    TLS,
+    HTTP,
+    Internal,
+    GIT,
+    SSH,
+)
 from fluentm.renderer import report
 
 # Example of a more code-oriented approach, using variables which will play

@@ -10,6 +10,10 @@ digraph "Customer Views Details" {
 	subgraph "cluster_Back End" {
 		graph [color=red fontname=Arial fontsize=11 label="Back End" style=dashed]
 		"User Database"
+	}
+	subgraph "cluster_Back End" {
+		graph [color=red fontname=Arial fontsize=11 label="Back End" style=dashed]
+		"User Database"
 		"Stock Database"
 	}
 	subgraph "cluster_External CDN" {

@@ -6,11 +6,25 @@ digraph all {
 	subgraph "cluster_AWS SVCs" {
 		graph [color=red fontname=Arial fontsize=11 label="AWS SVCs" style=dashed]
 		EKS
+	}
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=11 label="AWS SVCs" style=dashed]
+		EKS
 		IAM
-		VPC
 	}
 	subgraph "cluster_Single Tenant VPC" {
 		graph [color=red fontname=Arial fontsize=11 label="Single Tenant VPC" style=dashed]
+		subgraph "cluster_Kubernetes Control Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Control Plane" style=dashed]
+			"Kube API"
+		}
+	}
+	subgraph "cluster_Single Tenant VPC" {
+		graph [color=red fontname=Arial fontsize=11 label="Single Tenant VPC" style=dashed]
+		subgraph "cluster_Kubernetes Control Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Control Plane" style=dashed]
+			"Kube API"
+		}
 		subgraph "cluster_Kubernetes Control Plane" {
 			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Control Plane" style=dashed]
 			"Kube API"
@@ -22,8 +36,25 @@ digraph all {
 		subgraph "cluster_Kubernetes Data Plane" {
 			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
 			Kubelet
+		}
+	}
+	subgraph "cluster_Customer Account" {
+		graph [color=red fontname=Arial fontsize=11 label="Customer Account" style=dashed]
+		subgraph "cluster_Kubernetes Data Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
+			Kubelet
+		}
+		subgraph "cluster_Kubernetes Data Plane" {
+			graph [color=red fontname=Arial fontsize=11 label="Kubernetes Data Plane" style=dashed]
+			Kubelet
 			"CNI Pod"
 		}
+	}
+	subgraph "cluster_AWS SVCs" {
+		graph [color=red fontname=Arial fontsize=11 label="AWS SVCs" style=dashed]
+		EKS
+		IAM
+		VPC
 	}
 	User -> EKS [dir=both]
 	User -> IAM [dir=both]

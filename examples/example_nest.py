@@ -1,4 +1,14 @@
-from fluentm.entities import Actor, Boundary, Process, Data, DataFlow, HTTP, TLS, SQL, Internal
+from fluentm.entities import (
+    Actor,
+    Boundary,
+    Process,
+    Data,
+    DataFlow,
+    HTTP,
+    TLS,
+    SQL,
+    Internal,
+)
 from fluentm.renderer import report
 
 

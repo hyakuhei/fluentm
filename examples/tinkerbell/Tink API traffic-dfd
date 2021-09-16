@@ -6,14 +6,36 @@ digraph "Tink API traffic" {
 	subgraph "cluster_Tink Control Plane Network" {
 		graph [color=red fontname=Arial fontsize=11 label="Tink Control Plane Network" style=dashed]
 		"Tink API"
-		boots
-		Nginx
-		"Container Registry"
-		Hegel
 	}
 	subgraph "cluster_On Premise Network" {
 		graph [color=red fontname=Arial fontsize=11 label="On Premise Network" style=dashed]
 		Machine
+	}
+	subgraph "cluster_Tink Control Plane Network" {
+		graph [color=red fontname=Arial fontsize=11 label="Tink Control Plane Network" style=dashed]
+		"Tink API"
+		boots
+	}
+	subgraph "cluster_Tink Control Plane Network" {
+		graph [color=red fontname=Arial fontsize=11 label="Tink Control Plane Network" style=dashed]
+		"Tink API"
+		boots
+		Nginx
+	}
+	subgraph "cluster_Tink Control Plane Network" {
+		graph [color=red fontname=Arial fontsize=11 label="Tink Control Plane Network" style=dashed]
+		"Tink API"
+		boots
+		Nginx
+		"Container Registry"
+	}
+	subgraph "cluster_Tink Control Plane Network" {
+		graph [color=red fontname=Arial fontsize=11 label="Tink Control Plane Network" style=dashed]
+		"Tink API"
+		boots
+		Nginx
+		"Container Registry"
+		Hegel
 	}
 	"tink-cli" -> "Tink API" [label="(1) API request"]
 	Machine -> boots [label="(2) IP Request"]

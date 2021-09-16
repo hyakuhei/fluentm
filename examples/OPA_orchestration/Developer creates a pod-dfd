@@ -3,7 +3,6 @@ digraph "Developer creates a pod" {
 	node [fontname=Arial fontsize=11 shape=box style=rounded]
 	edge [fontname=Arial fontsize=11]
 	Developer
-	OPA
 	subgraph "cluster_New AWS Account" {
 		graph [color=red fontname=Arial fontsize=11 label="New AWS Account" style=dashed]
 		subgraph "cluster_New Kubernetes Cluster" {
@@ -15,6 +14,7 @@ digraph "Developer creates a pod" {
 		graph [color=red fontname=Arial fontsize=11 label="Cluster Orchestrator" style=dashed]
 		"Admission Controller"
 	}
+	OPA
 	subgraph "cluster_Version Control" {
 		graph [color=red fontname=Arial fontsize=11 label="Version Control" style=dashed]
 		"Policy Repo"

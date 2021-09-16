@@ -4,17 +4,19 @@ from importlib import resources
 from graphviz import Digraph
 from jinja2 import PackageLoader, Environment
 
-from fluentm.entities import (
-    Boundary,
-    DataFlow
-)
+from fluentm.entities import Boundary, DataFlow
 
 SPACES = "   "
+
 
 def renderDfd(graph: Digraph, title: str, outputDir: str):
     graph.render(f"{outputDir}/{title}-dfd", format="png", view=False)
     # print(graph)
     return f"{title}-dfd.png"
+
+
+def _addBoundariesToGraph(graph, boundaries):
+    pass
 
 
 def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False):
@@ -28,7 +30,6 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
         style="rounded",
     )
     graph.attr("edge", fontname="Arial", fontsize="11")
-    # This will break tests!
 
     clusterAttr = {
         "fontname": "Arial",
@@ -37,43 +38,43 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
         "style": "dashed",
     }
 
-    boundaryClusters = {}
-
-    # Track which nodes should be placed in which clusters but place neither until we've built the subgraph structure.
-    placements = {}
-
-    # Gather the boundaries and understand how they're nested (but don't nest the graphviz objects ,yet)
-    # Graphviz subgraphs can't have nodes added, so you need to populate a graph with nodes first, then subgraph it under another graph
+    assetDrawn = {}
+    clusterMap = (
+        {}
+    )  # Map from a boundary.name to a Digraph, to avoid rebuilding lots of digraphs
     for flow in scenes[title]:
-        for e in (flow.pitcher, flow.catcher):
-            if e.name not in placements.keys():
-                if hasattr(e, "boundary"):
-                    ptr = e
-                    while hasattr(ptr, "boundary"):
-                        if ptr.boundary.name not in boundaryClusters:
-                            boundaryClusters[ptr.boundary.name] = Digraph(
-                                name=f"cluster_{ptr.boundary.name}",
-                                graph_attr=clusterAttr | {"label": ptr.boundary.name},
-                            )
-                        ptr = ptr.boundary
-
-                    placements[e.name] = boundaryClusters[e.boundary.name]
+        for asset in (flow.pitcher, flow.catcher):
+            if asset.name not in assetDrawn:
+                lineage = asset.getBoundaries()
+                if len(lineage) == 0:
+                    graph.node(asset.name)
+                    assetDrawn[asset.name] = True
                 else:
-                    placements[e.name] = graph
+                    lineage.reverse()
+                    boundaryName = lineage.pop().name
+                    if boundaryName not in clusterMap:
+                        clusterMap[boundaryName] = Digraph(
+                            f"cluster_{boundaryName}",
+                            graph_attr=clusterAttr | {"label": boundaryName},
+                        )
+                    toSub = clusterMap[boundaryName]
+                    toSub.node(asset.name)
+                    assetDrawn[asset.name] = True
 
-    # Place nodes in Graphs, ready for subgraphing
-    for n in placements:
-        placements[n].node(n)
+                    while lineage:  # Add all the parents
+                        boundaryName = lineage.pop().name
+                        if boundaryName not in clusterMap:
+                            clusterMap[boundaryName] = Digraph(
+                                f"cluster_{boundaryName}",
+                                graph_attr=clusterAttr | {"label": boundaryName},
+                            )
+                        d = clusterMap[boundaryName]
+                        d.subgraph(toSub)
+                        toSub = d
 
-    # Subgraph the nodes
-    for c in boundaryClusters:
-        b = Boundary(c)  # The boundary name
-        if hasattr(b, "boundary"):
-            boundaryClusters[b.boundary.name].subgraph(boundaryClusters[c])
-        else:
-            graph.subgraph(boundaryClusters[c])
-
-    # Add the edges
+                    graph.subgraph(
+                        toSub
+                    )  # Add the grand-grand-grandN parent to the graph
 
     if simplified is True:
         edges = (
@@ -106,7 +107,11 @@ def dfd(scenes: dict, title: str, dfdLabels=True, render=False, simplified=False
             else:
                 graph.edge(flow.pitcher.name, flow.catcher.name, f"({flowCounter})")
             flowCounter += 1
+
     return graph
+
+    # I'm starting to think I've gone too far with the "Make it easy to write without knowing code" and the BORG
+    # Pattern is way more trouble than it's worth in this instance. It's making everything much harder.
 
 
 def dataFlowTable(scenes: dict, key: str, images=False, outputDir=""):

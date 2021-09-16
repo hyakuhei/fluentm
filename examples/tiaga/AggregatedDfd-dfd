@@ -13,9 +13,48 @@ digraph all {
 			"Web Server"
 		}
 	}
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=11 label="Tiaga Co" style=dashed]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=11 label="Front End Systems" style=dashed]
+			"Web Server"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=11 label=Databases style=dashed]
+			"Content DB"
+		}
+	}
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=11 label="Tiaga Co" style=dashed]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=11 label="Front End Systems" style=dashed]
+			"Web Server"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=11 label=Databases style=dashed]
+			"Content DB"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=11 label=Databases style=dashed]
+			"Content DB"
+			"Stock DB"
+		}
+	}
+	subgraph cluster_Internet {
+		graph [color=red fontname=Arial fontsize=11 label=Internet style=dashed]
+		Customer
+		subgraph cluster_Visa {
+			graph [color=red fontname=Arial fontsize=11 label=Visa style=dashed]
+			"Merchant API"
+		}
+	}
 	subgraph cluster_Logistics {
 		graph [color=red fontname=Arial fontsize=11 label=Logistics style=dashed]
 		"Order Resolver"
+	}
+	subgraph cluster_Warehouse {
+		graph [color=red fontname=Arial fontsize=11 label=Warehouse style=dashed]
+		"Label Printer"
 	}
 	subgraph cluster_Warehouse {
 		graph [color=red fontname=Arial fontsize=11 label=Warehouse style=dashed]

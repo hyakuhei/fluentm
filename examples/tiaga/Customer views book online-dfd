@@ -13,6 +13,33 @@ digraph "Customer views book online" {
 			"Web Server"
 		}
 	}
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=11 label="Tiaga Co" style=dashed]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=11 label="Front End Systems" style=dashed]
+			"Web Server"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=11 label=Databases style=dashed]
+			"Content DB"
+		}
+	}
+	subgraph "cluster_Tiaga Co" {
+		graph [color=red fontname=Arial fontsize=11 label="Tiaga Co" style=dashed]
+		subgraph "cluster_Front End Systems" {
+			graph [color=red fontname=Arial fontsize=11 label="Front End Systems" style=dashed]
+			"Web Server"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=11 label=Databases style=dashed]
+			"Content DB"
+		}
+		subgraph cluster_Databases {
+			graph [color=red fontname=Arial fontsize=11 label=Databases style=dashed]
+			"Content DB"
+			"Stock DB"
+		}
+	}
 	Customer -> "Web Server" [label="(1) View item ID"]
 	"Web Server" -> "Content DB" [label="(2) Fetch content for ID"]
 	"Content DB" -> "Web Server" [label="(3) Image Content, Description"]

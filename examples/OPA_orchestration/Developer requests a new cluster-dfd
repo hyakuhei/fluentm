@@ -10,6 +10,10 @@ digraph "Developer requests a new cluster" {
 	subgraph cluster_AWS {
 		graph [color=red fontname=Arial fontsize=11 label=AWS style=dashed]
 		IAM
+	}
+	subgraph cluster_AWS {
+		graph [color=red fontname=Arial fontsize=11 label=AWS style=dashed]
+		IAM
 		EKS
 	}
 	subgraph "cluster_New AWS Account" {

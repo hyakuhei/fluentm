@@ -14,9 +14,41 @@ digraph all {
 	}
 	subgraph "cluster_B Outer" {
 		graph [color=red fontname=Arial fontsize=11 label="B Outer" style=dashed]
+		subgraph "cluster_B Mid" {
+			graph [color=red fontname=Arial fontsize=11 label="B Mid" style=dashed]
+			subgraph "cluster_B Inner" {
+				graph [color=red fontname=Arial fontsize=11 label="B Inner" style=dashed]
+				Bob
+			}
+		}
+	}
+	subgraph "cluster_B Outer" {
+		graph [color=red fontname=Arial fontsize=11 label="B Outer" style=dashed]
+		subgraph "cluster_B Mid" {
+			graph [color=red fontname=Arial fontsize=11 label="B Mid" style=dashed]
+			subgraph "cluster_B Inner" {
+				graph [color=red fontname=Arial fontsize=11 label="B Inner" style=dashed]
+				Bob
+			}
+		}
+		Charlie
+	}
+	subgraph "cluster_B Outer" {
+		graph [color=red fontname=Arial fontsize=11 label="B Outer" style=dashed]
+		subgraph "cluster_B Mid" {
+			graph [color=red fontname=Arial fontsize=11 label="B Mid" style=dashed]
+			subgraph "cluster_B Inner" {
+				graph [color=red fontname=Arial fontsize=11 label="B Inner" style=dashed]
+				Bob
+			}
+		}
 		Charlie
 		subgraph "cluster_B Mid" {
 			graph [color=red fontname=Arial fontsize=11 label="B Mid" style=dashed]
+			subgraph "cluster_B Inner" {
+				graph [color=red fontname=Arial fontsize=11 label="B Inner" style=dashed]
+				Bob
+			}
 			subgraph "cluster_B Inner" {
 				graph [color=red fontname=Arial fontsize=11 label="B Inner" style=dashed]
 				Bob
